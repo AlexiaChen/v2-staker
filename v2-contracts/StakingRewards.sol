@@ -8,7 +8,9 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 // Inheritance
 import "./interfaces/IStakingRewards.sol";
+import "./interfaces/IUniswapV2ERC20.sol";
 import "./RewardsDistributionRecipient.sol";
+
 
 contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, ReentrancyGuard {
     using SafeMath for uint256;
@@ -161,6 +163,3 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     event RewardPaid(address indexed user, uint256 reward);
 }
 
-interface IUniswapV2ERC20 {
-    function permit(address owner, address spender, uint value, uint deadline, uint8 v, bytes32 r, bytes32 s) external;
-}
