@@ -28,7 +28,7 @@ async function main() {
   // getting timestamp
   const blockNumBefore = await ethers.provider.getBlockNumber();
   const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-  const timestamp = blockBefore.timestamp + 60;
+  const timestamp = blockBefore.timestamp + 60*15;
 
   const stakingRewardsFactory = await ethers.getContractFactory("StakingRewardsFactory");
   const hreStakingRedwardsFactory = await stakingRewardsFactory.deploy(hreMockReward.address, timestamp);
