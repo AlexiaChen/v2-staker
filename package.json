@@ -72,6 +72,7 @@
     "localnode": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat node",
     "deploylocal": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deploy.ts --network hardhat",
     "deploylocal2": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deployv2.ts --network hardhat",
+    "deploylocal2goer": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deployv2.ts --network goerli",
     "lint": "eslint . --ext .ts",
     "prettier:check": "prettier-check contracts/**/*.sol test/**/*.ts types/*.ts",
     "size-contracts": "hardhat compile && hardhat size-contracts",
