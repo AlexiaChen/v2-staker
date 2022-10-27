@@ -4,7 +4,7 @@ const hre = require('hardhat');
 
 async function main() {
 
-  console.log("ETHERSCAN_API_KEY: ", process.env.ETHERSCAN_API_KEY);
+  console.log("Deployv2 script ETHERSCAN_API_KEY: ", process.env.ETHERSCAN_API_KEY);
   
   const [owner, addr1, addr2] = await ethers.getSigners();
     

@@ -71,8 +71,8 @@ const config: HardhatUserConfig = {
       url: `https://rinkeby.infura.io/v3/${process.env.INFURA_API_KEY}`,
     },
     goerli: {
-      url: 'https://goerli.infura.io/v3/1cd80711bced49fba439826c916c8871',
-      accounts: ['1b85de991fefdd7677a0c0beae945a2162251367f831b6987eff044ea6f8ec73']
+      url: `https://goerli.infura.io/v3/${process.env.INFURA_API_KEY}`,
+      accounts: [`${process.env.ACCOUNT_PRIV_KEY}`]
     },
     kovan: {
       url: `https://kovan.infura.io/v3/${process.env.INFURA_API_KEY}`,
