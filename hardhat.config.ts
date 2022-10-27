@@ -21,6 +21,16 @@ const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
   },
 }
 
+const V2_COMPIPLER_SETTINGS: SolcUserConfig = {
+  version: '0.5.17',
+  settings: {
+    optimizer: {
+      enabled: true,
+      runs: 1_000_000,
+    },
+  },
+}
+
 if (process.env.RUN_COVERAGE == '1') {
   /**
    * Updates the default compiler settings when running coverage.
@@ -58,13 +68,21 @@ const config: HardhatUserConfig = {
     },
   },
   solidity: {
-    compilers: [DEFAULT_COMPILER_SETTINGS],
+    compilers: [/*DEFAULT_COMPILER_SETTINGS, */ V2_COMPIPLER_SETTINGS],
   },
   contractSizer: {
     alphaSort: false,
     disambiguatePaths: true,
     runOnCompile: false,
   },
+
+  paths: {
+    sources: "v2-contracts",
+    tests: "v2-tests",
+    cache: "./cache",
+    artifacts: "./artifacts"
+
+  }
 }
 
 if (process.env.ETHERSCAN_API_KEY) {
