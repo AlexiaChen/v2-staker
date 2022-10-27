@@ -1,10 +1,11 @@
 import { ethers } from 'hardhat';
-
+const hre = require('hardhat');
 
 
 async function main() {
 
-    
+  console.log("ETHERSCAN_API_KEY: ", process.env.ETHERSCAN_API_KEY);
+  
   const [owner, addr1, addr2] = await ethers.getSigners();
     
   //// UniswapV2ERC20 token
@@ -38,7 +39,18 @@ async function main() {
   console.log("UniswapV2ERC20 address is:", hreUniswapERC20Token.address);
   console.log("StakingRewardsFactory address is:", hreStakingRedwardsFactory.address);
     
-  
+  // Verify contract
+  let deployNetwork: string = 'goerli';
+  await hre.run('verify:verify', {
+    address: hreStakingRedwardsFactory.address,
+    constructorArguments: [hreMockReward.address, timestamp],
+    network: deployNetwork,
+    apiKey: {
+        goerli: process.env.ETHERSCAN_API_KEY,
+    },
+});
+
+
   }
   
   main()

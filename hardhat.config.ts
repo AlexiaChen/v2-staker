@@ -10,7 +10,7 @@ import '@nomicfoundation/hardhat-toolbox';
 import { HardhatUserConfig } from 'hardhat/config'
 import { SolcUserConfig } from 'hardhat/types'
 
-
+require('dotenv').config()
 
 
 
@@ -52,6 +52,10 @@ if (process.env.RUN_COVERAGE == '1') {
   }
 }
 
+console.log("#### hardhat config file: INFURA API key: ", process.env.INFURA_API_KEY);
+console.log("#### hardhat config file: THERSCAN API key: ", process.env.ETHERSCAN_API_KEY);
+console.log("#### hardhat config file: account priv key: ", process.env.ACCOUNT_PRIV_KEY);
+
 const config: HardhatUserConfig = {
   networks: {
     hardhat: {
@@ -92,12 +96,14 @@ const config: HardhatUserConfig = {
   }
 }
 
-if (process.env.ETHERSCAN_API_KEY) {
+
   config.etherscan = {
     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: {
+      goerli: `${process.env.ETHERSCAN_API_KEY}`,
+    }
   }
-}
+
 
 export default config

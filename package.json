@@ -27,7 +27,8 @@
   "dependencies": {
     "@openzeppelin/contracts": "2.3.0",
     "@uniswap/v3-core": "1.0.0",
-    "@uniswap/v3-periphery": "^1.0.1"
+    "@uniswap/v3-periphery": "^1.0.1",
+    "dotenv": "^11.0.0"
   },
   "devDependencies": {
     "@ethersproject/abi": "^5.7.0",
@@ -73,6 +74,7 @@
     "deploylocal": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deploy.ts --network hardhat",
     "deploylocal2": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deployv2.ts --network hardhat",
     "deploylocal2goer": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deployv2.ts --network goerli",
+    "verifygoer": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat verify --network goerli 0x9657515B2667Fe56add870deD98069C8983f627b \"Hello World!\"",
     "lint": "eslint . --ext .ts",
     "prettier:check": "prettier-check contracts/**/*.sol test/**/*.ts types/*.ts",
     "size-contracts": "hardhat compile && hardhat size-contracts",
