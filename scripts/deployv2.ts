@@ -12,6 +12,7 @@ async function main() {
   const uniswapERC20Token = await ethers.getContractFactory("UniswapV2ERC20");
   const hreUniswapERC20Token = await uniswapERC20Token.deploy();
   await hreUniswapERC20Token.deployed();
+  console.log("UniswapV2ERC20 address is:", hreUniswapERC20Token.address);
 
   //// StakingRewardsFactory
 
@@ -19,11 +20,13 @@ async function main() {
   const mockRewardToken = await ethers.getContractFactory("MyRewardERC20");
   const hreMockReward = await mockRewardToken.deploy();
   await hreMockReward.deployed();
+  console.log("My Reward ERC20 Token address is:", hreMockReward.address);
 
   // mock staking token
   const mockStakingToken = await ethers.getContractFactory("MyStakingERC20");
   const hreMockStaking = await mockStakingToken.deploy();
   await hreMockStaking.deployed();
+  console.log("My Staking ERC20 Token address is:", hreMockStaking.address); 
 
   // getting timestamp
   const blockNumBefore = await ethers.provider.getBlockNumber();
@@ -31,16 +34,14 @@ async function main() {
   const timestamp = blockBefore.timestamp + 60*15;
 
   const stakingRewardsFactory = await ethers.getContractFactory("StakingRewardsFactory");
+  console.log("Deploying StakingRewardsFactory");
   const hreStakingRedwardsFactory = await stakingRewardsFactory.deploy(hreMockReward.address, timestamp);
   await hreStakingRedwardsFactory.deployed();
-
-  console.log("My Reward ERC20 Token address is:", hreMockReward.address);
-  console.log("My Staking ERC20 Token address is:", hreMockStaking.address); 
-  console.log("UniswapV2ERC20 address is:", hreUniswapERC20Token.address);
   console.log("StakingRewardsFactory address is:", hreStakingRedwardsFactory.address);
     
   // Verify contract
-  let deployNetwork: string = 'goerli';
+  let deployNetwork: string = `${process.env.VERIFY_DEPLOYED_NETWORK}`;
+  console.log("verify deployed network: ", deployNetwork);
   await hre.run('verify:verify', {
     address: hreStakingRedwardsFactory.address,
     constructorArguments: [hreMockReward.address, timestamp],
