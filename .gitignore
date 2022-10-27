@@ -7,3 +7,4 @@ typechain/
 dist/
 coverage/
 .env
+typechain-types/
