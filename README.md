@@ -53,3 +53,7 @@ $ UPDATE_SNAPSHOT=1 yarn test
 ```sh
 $ yarn size-contracts
 ```
+
+## TroubleShooting 
+
+- https://github.com/Uniswap/v3-staker/issues/236
