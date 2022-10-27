@@ -6,7 +6,11 @@ async function main() {
 
   console.log("Deployv2 script ETHERSCAN_API_KEY: ", process.env.ETHERSCAN_API_KEY);
   
-  const [owner, addr1, addr2] = await ethers.getSigners();
+  const [deployer, addr1, addr2] = await ethers.getSigners();
+  console.log(`Deploying contracts with the account: ${deployer.address}`);
+  const balance = await deployer.getBalance();
+  console.log(`Deployment Account balance: ${balance.toString()}`);
+
   console.log("Deploying...");
   //// UniswapV2ERC20 token
   const uniswapERC20Token = await ethers.getContractFactory("UniswapV2ERC20");
