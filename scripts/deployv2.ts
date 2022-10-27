@@ -7,7 +7,7 @@ async function main() {
   console.log("Deployv2 script ETHERSCAN_API_KEY: ", process.env.ETHERSCAN_API_KEY);
   
   const [owner, addr1, addr2] = await ethers.getSigners();
-    
+  console.log("Deploying...");
   //// UniswapV2ERC20 token
   const uniswapERC20Token = await ethers.getContractFactory("UniswapV2ERC20");
   const hreUniswapERC20Token = await uniswapERC20Token.deploy();
