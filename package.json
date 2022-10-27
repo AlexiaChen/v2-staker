@@ -63,13 +63,13 @@
     "typescript": "^4.3.2"
   },
   "scripts": {
-    "compile": "hardhat compile",
-    "localnode":"npx hardhat node",
-    "deploylocal": "npx hardhat --network hardhat deploy",
+    "compile": "NODE_OPTIONS=--openssl-legacy-provider hardhat compile",
+    "localnode":"NODE_OPTIONS=--openssl-legacy-provider npx hardhat node",
+    "deploylocal": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deploy.ts --network hardhat",
     "lint": "eslint . --ext .ts",
     "prettier:check": "prettier-check contracts/**/*.sol test/**/*.ts types/*.ts",
     "size-contracts": "hardhat compile && hardhat size-contracts",
-    "test": "hardhat test",
+    "test": "NODE_OPTIONS=--openssl-legacy-provider hardhat test",
     "clear-cache": "rm -rf artifacts/ cache/ typechain/",
     "coverage": "RUN_COVERAGE=1 hardhat coverage"
   }
