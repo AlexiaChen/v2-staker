@@ -50,6 +50,32 @@ async function main() {
     },
 });
 
+  await hre.run('verify:verify', {
+    address: hreUniswapERC20Token.address,
+    constructorArguments: [],
+    network: deployNetwork,
+    apiKey: {
+        goerli: process.env.ETHERSCAN_API_KEY,
+    },
+  });
+
+  await hre.run('verify:verify', {
+    address: hreMockReward.address,
+    constructorArguments: [],
+    network: deployNetwork,
+    apiKey: {
+        goerli: process.env.ETHERSCAN_API_KEY,
+    },
+  });
+
+  await hre.run('verify:verify', {
+    address: hreMockStaking.address,
+    constructorArguments: [],
+    network: deployNetwork,
+    apiKey: {
+        goerli: process.env.ETHERSCAN_API_KEY,
+    },
+  });
 
   }
   
