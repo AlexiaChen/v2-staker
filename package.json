@@ -69,7 +69,8 @@
     "typescript": "^4.3.2"
   },
   "scripts": {
-    "compile": "NODE_OPTIONS=--openssl-legacy-provider hardhat compile",
+    "clean": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat clean",
+    "compile": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat compile",
     "localnode": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat node",
     "deploylocal": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deploy.ts --network hardhat",
     "deploylocal2": "NODE_OPTIONS=--openssl-legacy-provider npx hardhat run  scripts/deployv2.ts --network hardhat",
