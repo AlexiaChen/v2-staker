@@ -22,7 +22,7 @@ const DEFAULT_COMPILER_SETTINGS: SolcUserConfig = {
 }
 
 const V2_COMPIPLER_SETTINGS: SolcUserConfig = {
-  version: '0.5.17',
+  version: '0.5.16',
   settings: {
     optimizer: {
       enabled: true,
