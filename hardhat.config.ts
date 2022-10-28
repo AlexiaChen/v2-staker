@@ -57,9 +57,15 @@ console.log("#### hardhat config file: THERSCAN API key: ", process.env.ETHERSCA
 console.log("#### hardhat config file: account priv key: ", process.env.ACCOUNT_PRIV_KEY);
 
 const config: HardhatUserConfig = {
+  defaultNetwork: "hardhat",
+  
   networks: {
     hardhat: {
       allowUnlimitedContractSize: false,
+      mining: {
+        auto: false,
+        interval: 1000*30
+      }
     },
     mainnet: {
       url: `https://mainnet.infura.io/v3/${process.env.INFURA_API_KEY}`,
@@ -88,8 +94,8 @@ const config: HardhatUserConfig = {
   },
 
   paths: {
-    sources: "v2-contracts",
-    tests: "v2-tests",
+    sources: "./contracts",
+    tests: "./test",
     cache: "./cache",
     artifacts: "./artifacts"
 

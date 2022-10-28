@@ -76,6 +76,8 @@ describe("Staker contract", function () {
     // deploy staking token
     expect(await hreStakingRedwardsFactory.stakingTokens(0)).to.be.equal(hreMockStaking.address);
 
+    
+
 
   });
 
