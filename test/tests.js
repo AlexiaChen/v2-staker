@@ -88,7 +88,7 @@ describe("Staker contract", function () {
 
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
-  it("Staking Reward Factory Reward ", async function () {
+  it("Staking Reward Factory RewardAmount && Staking Rewards", async function () {
     const { hreStakingRedwardsFactory, hreMockStaking, hreMockReward, owner} = await loadFixture(deployTokenFixture);
     
     // 部署一个staking token，质押这个staking token，可以获得奖励，奖励的amount为1000
@@ -120,5 +120,23 @@ describe("Staker contract", function () {
     // 2. Onwer可以deploy发布一个新的staking token来作为可以质押的ERC20的代币种类，不同的staking token种类，有对应不同的奖励Reward额度（Reward Amount）,但是奖励的ERC20 代币只有一种reward token
     //   这个在构造函数的时候就指定reward token了，这个reward token可能就是UniswaoV2ERC20的代币。当然，这个在测试中都是模拟出来的。
     
+
+    // 接下来测试Stake Withdraw
+
+    // 因为没有stake，所以总供应量是0
+    const StakingRewardsContract  = await (await ethers.getContractFactory("StakingRewards")).attach(stakingRewards);
+    expect(await StakingRewardsContract.totalSupply()).to.equal(0);
+
+    // 开始stake，stake就是用户把自己要质押的代币（前提，这个质押代币要先通过Factory先部署好），放到质押代币所对应的流动性池中，这个池就是StakingRewards
+    // 这里的用户暂时用owner, owner需要授权approve给StakingRewards合约，该合约才有权限转移owner的staking代币到本地址。
+    const stakingAmount = 100000;
+    await expect(hreMockStaking.approve(StakingRewardsContract.address, stakingAmount)).to.be.ok;
+    await StakingRewardsContract.stake(stakingAmount);
+    // 访问质押的额度, 一旦，质押，会把用户的stake token转移到StakingRewards合约的地址下
+    console.log("owner address: %s ", owner.address);
+    expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount);
+    expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount);
+    expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount);
+
   });
 });

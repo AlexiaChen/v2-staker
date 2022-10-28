@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import "./interfaces/IStakingRewards.sol";
 import "./interfaces/IUniswapV2ERC20.sol";
 import "./RewardsDistributionRecipient.sol";
-
+import "hardhat/console.sol";
 
 contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, ReentrancyGuard {
     using SafeMath for uint256;
@@ -51,6 +51,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     }
 
     function balanceOf(address account) external view returns (uint256) {
+        // console.log("StakingReward BalanceOf address: %s", account);
         return _balances[account];
     }
 
