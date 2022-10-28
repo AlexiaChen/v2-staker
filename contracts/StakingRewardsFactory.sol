@@ -52,10 +52,10 @@ contract StakingRewardsFactory is Ownable {
 
     // call notifyRewardAmount for all staking tokens.
     function notifyRewardAmounts() public {
-        console.log("entry notifyRewardAmounts");
+        //console.log("entry notifyRewardAmounts");
         require(stakingTokens.length > 0, 'StakingRewardsFactory::notifyRewardAmounts: called before any deploys');
         for (uint i = 0; i < stakingTokens.length; i++) {
-            console.log("notifyRewardAmount(%s)", stakingTokens[i]);
+            //console.log("notifyRewardAmount(%s)", stakingTokens[i]);
             notifyRewardAmount(stakingTokens[i]);
         }
     }
