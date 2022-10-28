@@ -70,6 +70,12 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     }
 
     function earned(address account) public view returns (uint256) {
+        // earned = stake balance * (rewardPertoken - userRewardPerTokenPaid) / 1e18 + rewards
+        // rewardPertoken = rewardPerTokenStored + ( (lastTimeRewardApplicable - lastUpdateTime) * rewardRate  * 1e18 / totalSupply) 
+        // userRewardPerTokenPaid = rewardPerTokenStored
+        // lastTimeRewardApplicable = min(block.timestamp, periodFinish)
+
+        // updateRewards = update reward = earned
         return _balances[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
     }
 
