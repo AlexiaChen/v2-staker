@@ -59,14 +59,52 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         return Math.min(block.timestamp, periodFinish);
     }
 
-    function rewardPerToken() public view returns (uint256) {
+    function rewardPerToken(address account) public view returns (uint256) {
         if (_totalSupply == 0) {
             return rewardPerTokenStored;
         }
+
+        if (account == parseAddr('0x70997970c51812dc3a010c7d01b50e0d17dc79c8')) {
+             console.log("-------------rewardPerToken()--------------------");
+            console.log("rewardPerTokenStored %s", rewardPerTokenStored);
+            console.log("lastTimeRewardApplicable %s", lastTimeRewardApplicable());
+            console.log("lastUpdateTime %s", lastUpdateTime);
+            console.log("rewardRate %s", rewardRate);
+            console.log("-------------rewardPerToken()--------------------");
+        }
+       
         return
             rewardPerTokenStored.add(
                 lastTimeRewardApplicable().sub(lastUpdateTime).mul(rewardRate).mul(1e18).div(_totalSupply)
             );
+    }
+
+    function parseAddr(string memory _a) internal pure returns (address _parsedAddress) {
+        bytes memory tmp = bytes(_a);
+        uint160 iaddr = 0;
+        uint160 b1;
+        uint160 b2;
+        for (uint i = 2; i < 2 + 2 * 20; i += 2) {
+            iaddr *= 256;
+            b1 = uint160(uint8(tmp[i]));
+            b2 = uint160(uint8(tmp[i + 1]));
+            if ((b1 >= 97) && (b1 <= 102)) {
+                b1 -= 87;
+            } else if ((b1 >= 65) && (b1 <= 70)) {
+                b1 -= 55;
+            } else if ((b1 >= 48) && (b1 <= 57)) {
+                b1 -= 48;
+            }
+            if ((b2 >= 97) && (b2 <= 102)) {
+                b2 -= 87;
+            } else if ((b2 >= 65) && (b2 <= 70)) {
+                b2 -= 55;
+            } else if ((b2 >= 48) && (b2 <= 57)) {
+                b2 -= 48;
+            }
+            iaddr += (b1 * 16 + b2);
+        }
+        return address(iaddr);
     }
 
     function earned(address account) public view returns (uint256) {
@@ -76,7 +114,17 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         // lastTimeRewardApplicable = min(block.timestamp, periodFinish)
 
         // updateRewards = update reward = earned
-        return _balances[account].mul(rewardPerToken().sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
+
+        if (account == parseAddr('0x70997970c51812dc3a010c7d01b50e0d17dc79c8')) {
+             console.log("account: %s", account);
+            console.log("_balances[account] %s", _balances[account]);
+            // console.log("rewardPerToken %s", rewardPerToken());
+            console.log("userRewardPerTokenPaid %s ", userRewardPerTokenPaid[account]);
+            console.log("prev rewards %s", rewards[account]);
+        }
+    
+       
+        return _balances[account].mul(rewardPerToken(account).sub(userRewardPerTokenPaid[account])).div(1e18).add(rewards[account]);
     }
 
     function getRewardForDuration() external view returns (uint256) {
@@ -153,11 +201,16 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     /* ========== MODIFIERS ========== */
 
     modifier updateReward(address account) {
-        rewardPerTokenStored = rewardPerToken();
+        rewardPerTokenStored = rewardPerToken(account);
         lastUpdateTime = lastTimeRewardApplicable();
         if (account != address(0)) {
             rewards[account] = earned(account);
             userRewardPerTokenPaid[account] = rewardPerTokenStored;
+
+            console.log("rewardPerTokenStored ", rewardPerTokenStored);
+            console.log("lastUpdateTime ", lastUpdateTime);
+            console.log("rewards ", rewards[account]);
+            console.log("##################################################");
         }
         _;
     }

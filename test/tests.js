@@ -1,6 +1,6 @@
-const { loadFixture } = require("@nomicfoundation/hardhat-network-helpers");
+const { loadFixture} = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
-const { ethers } = require("hardhat");
+const { ethers, network } = require("hardhat");
 const { delay } = require("lodash");
 //const { waffle } = require("hardhat");
 //const { deployMockContract, provider } = waffle;
@@ -70,7 +70,7 @@ describe("Staker contract", function () {
 
     // ownership
     // 这里主要表达式，只有owner的权限账号才可以部署deploy一个新的质押代币
-    await expect(hreStakingRedwardsFactory.connect(addr1.address).deploy(hreMockStaking.address, 1000)).to.be.rejected;
+    await expect(hreStakingRedwardsFactory.connect(addr1).deploy(hreMockStaking.address, 1000)).to.be.rejected;
     await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000)).to.be.ok;
     // only once deploy with same staking token address
     // 对于同一个质押staking代币，只可以部署一次，无论怎样修改其对应的奖励额度
@@ -80,7 +80,7 @@ describe("Staker contract", function () {
 
   it("Staking Reward Factory deploy new stake contract", async function () {
     const { hreStakingRedwardsFactory, hreMockStaking } = await loadFixture(deployTokenFixture);
-    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000)).to.be.ok;
+    await expect(await hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000)).to.be.ok;
     // deploy staking token
     // 每部署一个新的质押代币，其对应的代币合约地址就会被保存在Factory中
     expect(await hreStakingRedwardsFactory.stakingTokens(0)).to.be.equal(hreMockStaking.address);
@@ -89,7 +89,7 @@ describe("Staker contract", function () {
   const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
 
   it("Staking Reward Factory RewardAmount && Staking Rewards", async function () {
-    const { hreStakingRedwardsFactory, hreMockStaking, hreMockReward, owner} = await loadFixture(deployTokenFixture);
+    const { hreStakingRedwardsFactory, hreMockStaking, hreMockReward, owner, addr1} = await loadFixture(deployTokenFixture);
     
     // 部署一个staking token，质押这个staking token，可以获得奖励，奖励的amount为1000
     const rewardAmount = 1000;
@@ -111,7 +111,7 @@ describe("Staker contract", function () {
     // 因为Factory构造的时候指定了其开始工作的最小时间戳，所以需要延迟一下时间，不然不满足require的指定
     this.timeout(10*1000);
     await wait(1000*6);
-    await expect(hreStakingRedwardsFactory.notifyRewardAmounts()).to.be.ok;
+    await hreStakingRedwardsFactory.notifyRewardAmounts();
     expect(await hreMockReward.balanceOf(hreStakingRedwardsFactory.address)).to.equal(transferAmount - rewardAmount);
     const [ stakingRewards ] = await hreStakingRedwardsFactory.stakingRewardsInfoByStakingToken(hreMockStaking.address);
     expect(await hreMockReward.balanceOf(stakingRewards)).to.equal(rewardAmount);
@@ -130,7 +130,7 @@ describe("Staker contract", function () {
     // 开始stake，stake就是用户把自己要质押的代币（前提，这个质押代币要先通过Factory先部署好），放到质押代币所对应的流动性池中，这个池就是StakingRewards
     // 这里的用户暂时用owner, owner需要授权approve给StakingRewards合约，该合约才有权限转移owner的staking代币到本地址。
     const stakingAmount = 100000;
-    await expect(hreMockStaking.approve(StakingRewardsContract.address, stakingAmount)).to.be.ok;
+    await expect(await hreMockStaking.approve(StakingRewardsContract.address, stakingAmount)).to.be.ok;
     await StakingRewardsContract.stake(stakingAmount);
     expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount);
     expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount);
@@ -141,6 +141,39 @@ describe("Staker contract", function () {
     expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount - withdrawAmount);
     expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount - withdrawAmount);
     expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount - withdrawAmount);
+
+    // 这里在用非Owner用户质押,因为该用户没有stake token，需要转一点给它
+    const userStakingAmount = 500000;
+    const user1 = addr1;
+    const totalSupply = stakingAmount - withdrawAmount + userStakingAmount;
+    await expect(hreMockStaking.transfer(user1.address, userStakingAmount))
+      .to.changeTokenBalances(hreMockStaking, [owner.address, user1.address], [-userStakingAmount, userStakingAmount]);
+    expect(await hreMockStaking.balanceOf(user1.address)).to.equal(userStakingAmount);
+    // 用户质押
+    await expect(await hreMockStaking.connect(user1).approve(StakingRewardsContract.address, userStakingAmount)).to.be.ok;
+    await StakingRewardsContract.connect(user1).stake(userStakingAmount);
+    expect(await StakingRewardsContract.totalSupply()).to.equal(totalSupply);
+    expect(await StakingRewardsContract.balanceOf(user1.address)).to.equal(userStakingAmount);
+    expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(totalSupply);
+   
+    
+    // 拿取奖励前
+    expect(await hreMockReward.balanceOf(user1.address)).to.equal(0);
+    
+    // 把发交易后自动挖矿，改成等间隔2秒挖矿, 这样才可以通过最新的block.timestamp使发奖励的时候，时间差值生效
+    // hardhat的配置文件是发交易自动挖矿
+    await network.provider.send("evm_setAutomine", [false]);
+    await network.provider.send("evm_setIntervalMining", [2000]);
+
+    await hreStakingRedwardsFactory.notifyRewardAmounts();
+    // 延迟一段时间，拿取奖励
+    this.timeout(5*60*1000);
+    await wait(1000*60*1);
+
+    console.log("from test: owner address %s, user1 address %s", owner.address, user1.address);
+    await expect(await StakingRewardsContract.connect(user1).getReward()).to.be.emit;
+    //expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
+
 
   });
 });
