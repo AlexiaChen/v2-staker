@@ -108,7 +108,12 @@ describe("Staker contract", function () {
     await wait(1000*5);
     await expect(hreStakingRedwardsFactory.notifyRewardAmounts()).to.be.ok;
     expect(await hreMockReward.balanceOf(hreStakingRedwardsFactory.address)).to.equal(transferAmount - rewardAmount);
+    const [ stakingRewards ] = await hreStakingRedwardsFactory.stakingRewardsInfoByStakingToken(hreMockStaking.address);
+    expect(await hreMockReward.balanceOf(stakingRewards)).to.equal(rewardAmount);
 
-
+    // 1.测试到这里就会发现，对于StakingRewardFactory来说，它有些只有一个实例并且有Onwer。
+    // 2. Onwer可以deploy发布一个新的staking token来作为可以质押的ERC20的代币种类，不同的staking token种类，有对应不同的奖励Reward额度（Reward Amount）,但是奖励的ERC20 代币只有一种reward token
+    //   这个在构造函数的时候就指定reward token了，这个reward token可能就是UniswaoV2ERC20的代币。当然，这个在测试中都是模拟出来的。
+    
   });
 });
