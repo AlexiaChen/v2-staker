@@ -206,11 +206,13 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         if (account != address(0)) {
             rewards[account] = earned(account);
             userRewardPerTokenPaid[account] = rewardPerTokenStored;
-
-            console.log("rewardPerTokenStored ", rewardPerTokenStored);
-            console.log("lastUpdateTime ", lastUpdateTime);
-            console.log("rewards ", rewards[account]);
-            console.log("##################################################");
+            if (account == parseAddr('0x70997970c51812dc3a010c7d01b50e0d17dc79c8')) {
+                 console.log("rewardPerTokenStored ", rewardPerTokenStored);
+                console.log("lastUpdateTime ", lastUpdateTime);
+                console.log("rewards ", rewards[account]);
+                console.log("##################################################");
+            }
+           
         }
         _;
     }

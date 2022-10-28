@@ -150,7 +150,7 @@ describe("Staker contract", function () {
       .to.changeTokenBalances(hreMockStaking, [owner.address, user1.address], [-userStakingAmount, userStakingAmount]);
     expect(await hreMockStaking.balanceOf(user1.address)).to.equal(userStakingAmount);
     // 用户质押
-    await expect(await hreMockStaking.connect(user1).approve(StakingRewardsContract.address, userStakingAmount)).to.be.ok;
+    expect(await hreMockStaking.connect(user1).approve(StakingRewardsContract.address, userStakingAmount));
     await StakingRewardsContract.connect(user1).stake(userStakingAmount);
     expect(await StakingRewardsContract.totalSupply()).to.equal(totalSupply);
     expect(await StakingRewardsContract.balanceOf(user1.address)).to.equal(userStakingAmount);
@@ -165,13 +165,22 @@ describe("Staker contract", function () {
     await network.provider.send("evm_setAutomine", [false]);
     await network.provider.send("evm_setIntervalMining", [2000]);
 
+    const blockNumBefore = await ethers.provider.getBlockNumber();
+    const blockBefore = await ethers.provider.getBlock(blockNumBefore);
+    console.log("blockBefore %s", blockBefore.timestamp);
+
     await hreStakingRedwardsFactory.notifyRewardAmounts();
     // 延迟一段时间，拿取奖励
     this.timeout(5*60*1000);
     await wait(1000*60*1);
 
     console.log("from test: owner address %s, user1 address %s", owner.address, user1.address);
-    await expect(await StakingRewardsContract.connect(user1).getReward()).to.be.emit;
+    
+    const blockNumAfter = await ethers.provider.getBlockNumber();
+    const blockAfter = await ethers.provider.getBlock(blockNumAfter);
+    console.log("blockAfter %s", blockAfter.timestamp);
+    
+    await StakingRewardsContract.connect(user1).getReward();
     //expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
 
 
