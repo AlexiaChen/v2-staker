@@ -1,4 +1,4 @@
-pragma solidity =0.5.16;
+pragma solidity ^0.5.16;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
@@ -10,5 +10,7 @@ contract MyStakingERC20 is ERC20 {
     constructor()  public  {
         name = "My Staking Token";
         symbol = "MST";
+
+        _mint(msg.sender, 10 ether);
     }
 }

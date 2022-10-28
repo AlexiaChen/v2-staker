@@ -63,8 +63,8 @@ const config: HardhatUserConfig = {
     hardhat: {
       allowUnlimitedContractSize: false,
       mining: {
-        auto: false,
-        interval: 1000*30
+        auto: true,
+        interval: 0
       }
     },
     mainnet: {
