@@ -132,11 +132,15 @@ describe("Staker contract", function () {
     const stakingAmount = 100000;
     await expect(hreMockStaking.approve(StakingRewardsContract.address, stakingAmount)).to.be.ok;
     await StakingRewardsContract.stake(stakingAmount);
-    // 访问质押的额度, 一旦，质押，会把用户的stake token转移到StakingRewards合约的地址下
-    console.log("owner address: %s ", owner.address);
     expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount);
     expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount);
     expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount);
+    // 取款，也就是提取质押的stake token，把质押的token转移到自己的地址
+    const withdrawAmount = 1000;
+    await StakingRewardsContract.withdraw(withdrawAmount);
+    expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount - withdrawAmount);
+    expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount - withdrawAmount);
+    expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount - withdrawAmount);
 
   });
 });
