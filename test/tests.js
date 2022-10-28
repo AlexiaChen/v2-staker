@@ -173,13 +173,14 @@ describe("Staker contract", function () {
     // 延迟一段时间，拿取奖励
     this.timeout(5*60*1000);
     await wait(1000*60*1);
-
-    console.log("from test: owner address %s, user1 address %s", owner.address, user1.address);
     
+    console.log("from test: owner address %s, user1 address %s", owner.address, user1.address);
+  
     const blockNumAfter = await ethers.provider.getBlockNumber();
     const blockAfter = await ethers.provider.getBlock(blockNumAfter);
     console.log("blockAfter %s", blockAfter.timestamp);
     
+    //await StakingRewardsContract.connect(user1).testUpdateReward();
     await StakingRewardsContract.connect(user1).getReward();
     //expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
 

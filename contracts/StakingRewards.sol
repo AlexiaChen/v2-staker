@@ -217,6 +217,23 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         _;
     }
 
+    // function testUpdateReward() external {
+    //     console.log("####################testUpdateReward##############################");
+    //     rewardPerTokenStored = rewardPerToken(msg.sender);
+    //     lastUpdateTime = lastTimeRewardApplicable();
+    //     if (msg.sender != address(0)) {
+    //         rewards[msg.sender] = earned(msg.sender);
+    //         userRewardPerTokenPaid[msg.sender] = rewardPerTokenStored;
+    //         if (msg.sender == parseAddr('0x70997970c51812dc3a010c7d01b50e0d17dc79c8')) {
+    //              console.log("rewardPerTokenStored ", rewardPerTokenStored);
+    //             console.log("lastUpdateTime ", lastUpdateTime);
+    //             console.log("rewards ", rewards[msg.sender]);
+    //             console.log("######################testUpdateReward############################");
+    //         }
+           
+    //     }
+    // }
+
     /* ========== EVENTS ========== */
 
     event RewardAdded(uint256 reward);
