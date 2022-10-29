@@ -2,7 +2,9 @@
 
 This is the canonical staking contract designed for [Uniswap V3](https://github.com/Uniswap/uniswap-v3-core).
 
+## Arch
 
+![](images/arch.jpg)
 
 
 ## Development and Testing
