@@ -99,17 +99,33 @@ const config: HardhatUserConfig = {
     cache: "./cache",
     artifacts: "./artifacts"
 
-  }
-}
+  },
 
-
-  config.etherscan = {
-    // Your API key for Etherscan
+  etherscan: {
+     // Your API key for Etherscan
     // Obtain one at https://etherscan.io/
     apiKey: {
       goerli: `${process.env.ETHERSCAN_API_KEY}`,
-    }
+    },
+
+    // https://github.com/smartcontractkit/full-blockchain-solidity-course-js/discussions/2247
+    customChains: [
+      {
+        network: 'goerli',
+        chainId: 5,
+        urls: {
+          apiURL: 'http://api-goerli.etherscan.io/api',
+          browserURL: 'https://goerli.etherscan.io'
+        }
+      }
+    ]
   }
+
+  
+}
+
+
+  
 
 
 export default config
