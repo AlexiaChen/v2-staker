@@ -11,7 +11,7 @@ import "hardhat/console.sol";
 contract StakingRewardsFactory is Ownable {
     // immutables
     address public rewardsToken;
-    uint public stakingRewardsGenesis;
+    uint256 public stakingRewardsGenesis;
 
     // the staking tokens for which the rewards contract has been deployed
     address[] public stakingTokens;
@@ -27,7 +27,7 @@ contract StakingRewardsFactory is Ownable {
 
     constructor(
         address _rewardsToken,
-        uint _stakingRewardsGenesis
+        uint256 _stakingRewardsGenesis
     ) Ownable() public {
         require(_stakingRewardsGenesis >= block.timestamp, 'StakingRewardsFactory::constructor: genesis too soon');
 
