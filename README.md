@@ -12,6 +12,16 @@ This is the canonical staking contract designed for [Uniswap V3](https://github.
 
 如果要抵押stake你想要的代币获取流动性挖矿奖励，需要拿到对应的stake代币的奖励池合约的地址(StakeReward合约地址),然后调用其的stake方法，经过一段时间以后，再调用getward函数获取奖励代币。或者调用exit方法，获取奖励代币的同时，也提取你所欲的抵押的代币赎回。
 
+## Get Started && How to simply use
+
+0. 先给Factory合约的地址充钱，充My Reward ERC20代币的钱。
+
+1. 首先，拥有owner权限的account调用Factory的deploy方法，传递流动性挖矿需要支持的抵押ERC20代币合约的地址，和奖励的额度。首先，Factory工厂合约要有reward ERC20代币的余额，不然奖励池没法进行工作。所以再次之前，先确认Factory合约的地址下，有一定数量的MRT这个ERC20 代币(My Reeward Token)。这个数量的代币，deploy(stake erc20 token address, rewardAmount) rewardAmount
+
+2. 然后调用Factory合约的 notifyRewardAmounts() 或者 notifyRewardAmount(address stakingToken)，通知并向流动性矿池转之前deploy时候设置的rewardAmount这个数量的代币。
+
+3. 现在就可以使用StakingRewards的合约接口，比如用stake方法存stake的ERC20代币了，getReward方法提取质押期间所获得的奖励。如果要提取抵押的stake ERC20的代币，可以用withdraw方法。用exit方法更直接，提取奖励的同时也提取抵押的存款。
+
 ## Development and Testing
 
 ```sh
