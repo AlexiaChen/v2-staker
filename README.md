@@ -40,6 +40,8 @@ v2:
 yarn deploy:goerli
 ```
 
+Or you can use remix IDE for deploying, Flattening solidity file and upload files to REMIX IDE to compile, deploy.
+
 ## TroubleShooting 
 
 - https://github.com/Uniswap/v3-staker/issues/236
