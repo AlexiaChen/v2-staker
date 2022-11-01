@@ -11,6 +11,6 @@ contract MyStakingERC20 is ERC20 {
         name = "My Staking Token";
         symbol = "MST";
 
-        _mint(msg.sender, 10 ether);
+        _mint(msg.sender, 5000 ether);
     }
 }

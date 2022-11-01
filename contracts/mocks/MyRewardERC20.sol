@@ -13,7 +13,7 @@ contract MyRewardERC20 is ERC20 {
         name = "My Reward Token";
         symbol = "MRT";
 
-        _mint(msg.sender, 10 ether);
+        _mint(msg.sender, 5000 ether);
     }
 
     // function transfer(address recipient, uint256 amount) public  returns (bool)  {
