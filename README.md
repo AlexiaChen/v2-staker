@@ -46,11 +46,11 @@ v2:
 
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
-- My Stake ERC20 Token Address `0xe2003461C2A2c2d18B5CF72ae992f75640ABbF52`   (verified on etherscan) https://goerli.etherscan.io/address/0xe2003461c2a2c2d18b5cf72ae992f75640abbf52 
-- My Reward ERC20 Token Address `0xfC456971cF064cB610e6134dF3Bc3c861033052B` (verified on etherscan) https://goerli.etherscan.io/address/0xfc456971cf064cb610e6134df3bc3c861033052b
+- My Stake ERC20 Token Address `0x138F183171C849c6A7437A7E60C9ac28CEc66D07`   (verified on etherscan) https://goerli.etherscan.io/address/0x138f183171c849c6a7437a7e60c9ac28cec66d07 
+- My Reward ERC20 Token Address `0xc01C97800cbD85f39aE204e9510c400B27F9C93B` (verified on etherscan) https://goerli.etherscan.io/address/0xc01c97800cbd85f39ae204e9510c400b27f9c93b
 - UniswapV2ERC20 address `0x2c8D84ED5D3Aef8087A22B1f0d495bff395098FF` （veified on etherscan） https://goerli.etherscan.io/address/0x2c8d84ed5d3aef8087a22b1f0d495bff395098ff 
-- StakingRwardsFactory address `0x4cB454a7499EaC89EeBf6295C541E51e9803E7d0` （verified on etherscan） https://goerli.etherscan.io/address/0x4cb454a7499eac89eebf6295c541e51e9803e7d0 
-   - constructor(`0xfC456971cF064cB610e6134dF3Bc3c861033052B`, `1667185320`)
+- StakingRwardsFactory address `0xF0335B3F3baa36E32dfA5dFcC224C5D5c4654081` （verified on etherscan） https://goerli.etherscan.io/address/0xf0335b3f3baa36e32dfa5dfcc224c5d5c4654081 
+   - constructor(`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `1667299572`) 第一个参数是MRT代币的地址，奖励是奖励MRT代币，第二个参数是开始流动性挖矿开始工作的时间戳，设置是部署时间 + 半个小时以后
 
 ## Deploy
 
