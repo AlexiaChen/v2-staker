@@ -105,6 +105,25 @@ The first action a user must take in order to begin participating in an Incentiv
 Once deposited, a user may then stake their NFT into any number of active Incentives for the Uniswap V3 pool their NFT is tied to (note that this can happen atomically with an initial deposit). Staked NFTs then immediately start to earn rewards, according to the algorithm outlined above. Users may periodically claim accrued rewardTokens while the program is ongoing, or wait to claim until the program has concluded to minimize overhead.
 ```
 
+据说，sushiswap也有流动性挖矿，所以它的Farm我也调研了一下，就是流动性挖矿，抵押一个LP token，然后获取sushi代币的奖励，之前那个LP token是支持UniswapV2的Uni-v2代币的，但是现在不支持了 https://help.sushidocs.com/products/sushiswap-farms-menu :
+
+```txt
+The SushiSwap Farms (Menu) are located here:
+
+https://sushiswapclassic.org/farms
+
+The Farm allows users to yield farm Sushi rewards with each new block based on staking SLP tokens they received from exchange.sushiswapclassic.org/#/pool 
+
+The farm previously supported UNI-V2 LP tokens from Uniswap but it now only works with tokens from SushiSwap pools.
+```
+
+然后我找到了sushi的Stake和chef合约，Stake合约。其中chef合约的抵押和取款，包括通知奖励池的方式与UniswapV2的staker原理差不多 https://github.com/sushiswap/sushiswap/blob/2c8f91841b6050a2988aa849afddd24ce2a7e42c/protocols/masterchef/contracts/MasterChefV2.sol#L175-L204 ，暂时没有找到以前与UNI-v2对接的合约。Stake合约的初始化构建参数与uniswap的staker的基于一样，都有设置stake token，reward tokne，还有开始时间和结束时间戳 https://github.com/sushiswap/StakingContract/blob/bf0a87fba596d831552aa9f5c40aa49df0057c2a/src/StakingContractMainnet.sol#L72-L106 其中 https://github.com/sushiswap/StakingContract/blob/bf0a87fba596d831552aa9f5c40aa49df0057c2a/src/StakingContractMainnet.sol#L108-L113 方法对应的就是uniswap v2-staker中Factory的notifyRewardsAmount(address stakeToken)这个方法，大同小异。就是对奖励的时间区间和奖励进行变更。
+
+sushiswap的StakingContract和https://learnblockchain.cn/article/2128 题里面提到的MasterChef合约，感觉都是流动性挖矿，都可以抵押和赚取奖励。但是由于 https://learnblockchain.cn/article/2128 提到的代码，应该是MasterChef的是流动性挖矿的概率更大，因为里面提到了LP token了。https://github.com/sushiswap/sushiswap/blob/master/protocols/masterchef/contracts/MasterChef.sol
+
+MasterChef有V1和V2版本。大同小异。
+
+
 ## TroubleShooting 
 
 - https://github.com/Uniswap/v3-staker/issues/236
