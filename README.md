@@ -62,8 +62,14 @@ Deployed Staking Rewards pool：
 ## Deploy
 
 ```bash
-yarn deploy:goerli
+yarn deploy:goerli # deploy to goerli testnet
+
+# deploy to hardhat local network for testing
+yarn localnode # to run a local node for hardhat network
+yarn deploy:hardhat # deploy contracts to hardhat
 ```
+
+
 
 Or you can use remix IDE for deploying, Flattening solidity file and upload files to REMIX IDE to compile, deploy.
 
