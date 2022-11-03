@@ -6,8 +6,6 @@ import '@openzeppelin/contracts/ownership/Ownable.sol';
 
 import './StakingRewards.sol';
 
-import "hardhat/console.sol";
-
 contract StakingRewardsFactory is Ownable {
     // immutables
     address public rewardsToken;

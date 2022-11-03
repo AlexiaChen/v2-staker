@@ -2,8 +2,6 @@ pragma solidity ^0.5.16;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-// import "hardhat/console.sol";
-
 contract MyRewardERC20 is ERC20 {
     
     string public  name;
@@ -15,10 +13,4 @@ contract MyRewardERC20 is ERC20 {
 
         _mint(msg.sender, 5000 ether);
     }
-
-    // function transfer(address recipient, uint256 amount) public  returns (bool)  {
-    //     console.log("MyRewardERC20:: msg.sender address %s balance %s", msg.sender, balanceOf(msg.sender));
-    //     _transfer(msg.sender, recipient, amount);
-    //     return true;
-    // }
 }
