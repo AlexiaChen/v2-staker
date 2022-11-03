@@ -4,11 +4,8 @@ This is the canonical staking contract designed for [Uniswap V3](https://github.
 
 ## Arch
 
-![](images/arch.jpg)
 
-如果上图理解不了，请看下图
-
-![](images/arch2.png)
+![](images/arch0.png)
 
 架构大概是这样的，有一个抵押奖励的工厂合约`StakingRewardsFactory`， 这个是deployer这样的owner独占的，它被创建的时候传递两个参数，第一个是将会奖励的ERC20的代币地址，第二个是这个合约真正开始工作的时间，就是一个时间戳。Factory合约维护多个抵押奖励的池子，因为它可以支持不同的ERC20代币作为抵押，但是奖励的代币只有一种，就是constructor传递的那个奖励代币。
 
