@@ -1,5 +1,6 @@
 const { loadFixture} = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
+const { BigNumber } = require("ethers");
 const { ethers, network } = require("hardhat");
 const { delay } = require("lodash");
 //const { waffle } = require("hardhat");
@@ -92,18 +93,18 @@ describe("Staker contract", function () {
     const { hreStakingRedwardsFactory, hreMockStaking, hreMockReward, owner, addr1} = await loadFixture(deployTokenFixture);
     
     // 部署一个staking token，质押这个staking token，可以获得奖励，奖励的amount为1000
-    const rewardAmount = 1000;
+    const rewardAmount = 10000000000;
     await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, rewardAmount)).to.be.ok;
     expect(await hreStakingRedwardsFactory.stakingTokens(0)).to.be.equal(hreMockStaking.address);
 
     // Factory指定的工作时间戳还没有到,所以不可以开始其自身的工作
     await expect(hreStakingRedwardsFactory.notifyRewardAmounts()).to.be.revertedWith('StakingRewardsFactory::notifyRewardAmount: not ready');
 
-    expect(await hreMockStaking.balanceOf(owner.address)).to.equal(ethers.utils.parseEther("10"));
-    expect(await hreMockReward.balanceOf(owner.address)).to.equal(ethers.utils.parseEther("10"));
+    expect(await hreMockStaking.balanceOf(owner.address)).to.equal(ethers.utils.parseEther("5000"));
+    expect(await hreMockReward.balanceOf(owner.address)).to.equal(ethers.utils.parseEther("5000"));
 
     // 首先要转给Factory一定量的Reward Token。它后面才可以工作：转账reward token给其创建的不同质押代币对应的StakingRewards的合约
-    const transferAmount = 10000;
+    const transferAmount = 50000000000;
     await expect(hreMockReward.transfer(hreStakingRedwardsFactory.address, transferAmount))
       .to.changeTokenBalances(hreMockReward, [owner.address, hreStakingRedwardsFactory.address], [-transferAmount, transferAmount]);
     expect(await hreMockReward.balanceOf(hreStakingRedwardsFactory.address)).to.equal(transferAmount);
@@ -143,7 +144,7 @@ describe("Staker contract", function () {
     expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount - withdrawAmount);
 
     // 这里在用非Owner用户质押,因为该用户没有stake token，需要转一点给它
-    const userStakingAmount = 500000;
+    const userStakingAmount = 500000000;
     const user1 = addr1;
     const totalSupply = stakingAmount - withdrawAmount + userStakingAmount;
     await expect(hreMockStaking.transfer(user1.address, userStakingAmount))
@@ -180,9 +181,21 @@ describe("Staker contract", function () {
     const blockAfter = await ethers.provider.getBlock(blockNumAfter);
     console.log("blockAfter %s", blockAfter.timestamp);
     
-    //await StakingRewardsContract.connect(user1).testUpdateReward();
-    await StakingRewardsContract.connect(user1).getReward();
-    //expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
+    await StakingRewardsContract.withdraw(1000);
+
+    this.timeout(1*60*1000);
+    await wait(1000*30);
+
+    await StakingRewardsContract.withdraw(1000);
+
+    expect(await StakingRewardsContract.lastTimeRewardApplicable()).to.gt(blockBefore.timestamp);
+    expect(await StakingRewardsContract.rewardRate()).to.gt(0);
+    expect(await StakingRewardsContract.lastUpdateTime()).to.gt(blockBefore.timestamp);
+    expect(await StakingRewardsContract.rewardPerToken()).to.gt(0);
+    expect(await StakingRewardsContract.earned(user1.address)).to.gt(0);
+    expect(await StakingRewardsContract.connect(user1).getReward()).to.emit(StakingRewardsContract, "RewardPaid");
+   
+    // expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
 
 
   });
