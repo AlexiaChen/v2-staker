@@ -50,7 +50,6 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     }
 
     function balanceOf(address account) external view returns (uint256) {
-        // console.log("StakingReward BalanceOf address: %s", account);
         return _balances[account];
     }
 

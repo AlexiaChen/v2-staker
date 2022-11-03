@@ -50,10 +50,8 @@ contract StakingRewardsFactory is Ownable {
 
     // call notifyRewardAmount for all staking tokens.
     function notifyRewardAmounts() public {
-        //console.log("entry notifyRewardAmounts");
         require(stakingTokens.length > 0, 'StakingRewardsFactory::notifyRewardAmounts: called before any deploys');
         for (uint i = 0; i < stakingTokens.length; i++) {
-            //console.log("notifyRewardAmount(%s)", stakingTokens[i]);
             notifyRewardAmount(stakingTokens[i]);
         }
     }
@@ -61,20 +59,14 @@ contract StakingRewardsFactory is Ownable {
     // notify reward amount for an individual staking token.
     // this is a fallback in case the notifyRewardAmounts costs too much gas to call for all contracts
     function notifyRewardAmount(address stakingToken) public {
-        //console.log("entry notifyRewardAmount(stakingToken) block.timestamp %s stakingRwardsGenesis %s ", block.timestamp, stakingRewardsGenesis);
         require(block.timestamp >= stakingRewardsGenesis, 'StakingRewardsFactory::notifyRewardAmount: not ready');
 
-        //console.log("block.timestamp %s", block.timestamp);
         StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
         require(info.stakingRewards != address(0), 'StakingRewardsFactory::notifyRewardAmount: not deployed');
-
-        //console.log("info.rewardAmount %s", info.rewardAmount);
         
         if (info.rewardAmount > 0) {
             uint rewardAmount = info.rewardAmount;
             info.rewardAmount = 0;
-            //console.log("there is reward Token %s stakingReward addr %s reward amount %s", rewardsToken, info.stakingRewards, rewardAmount);
-            //console.log("address(this) rewardsToken balance: %s, stakingRewards balance %s", IERC20(rewardsToken).balanceOf(address(this)), IERC20(rewardsToken).balanceOf(info.stakingRewards));
             require(
                 IERC20(rewardsToken).transfer(info.stakingRewards, rewardAmount),
                 'StakingRewardsFactory::notifyRewardAmount: transfer failed'
