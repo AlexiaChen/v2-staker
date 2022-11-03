@@ -63,8 +63,12 @@ Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c
 
 Deployed Staking Rewards pool：
 
-- StakingRewards address `0x1B99525B56FA1eC891f711BbD3506af9d3110243` (verified on etherscan) https://goerli.etherscan.io/address/0x1B99525B56FA1eC891f711BbD3506af9d3110243
+- StakingRewards address(MST) `0x1B99525B56FA1eC891f711BbD3506af9d3110243` (verified on etherscan) https://goerli.etherscan.io/address/0x1B99525B56FA1eC891f711BbD3506af9d3110243
   - constructor(`0xF0335B3F3baa36E32dfA5dFcC224C5D5c4654081`， `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0x138F183171C849c6A7437A7E60C9ac28CEc66D07`) 第一个参数是factory的地址，第二个参数是MRT的地址，第三个参数是MST的地址
+
+- StakingRewards address(UniswapV2Pair) `0xc3f204df7bd5823031e264ddb3a45b6c3aca4885` (veridied on etherscan) https://goerli.etherscan.io/address/0xc3f204df7bd5823031e264ddb3a45b6c3aca4885
+   - constructor(`0xF0335B3F3baa36E32dfA5dFcC224C5D5c4654081`, `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0xFC5EB7FDd4d1Af0CEAf9B2b2E40CD8085A31c280`) 
+  
 
 ## Deploy
 
