@@ -6,6 +6,10 @@ This is the canonical staking contract designed for [Uniswap V3](https://github.
 
 ![](images/arch.jpg)
 
+如果上图理解不了，请看下图
+
+![](images/arch2.png)
+
 架构大概是这样的，有一个抵押奖励的工厂合约`StakingRewardsFactory`， 这个是deployer这样的owner独占的，它被创建的时候传递两个参数，第一个是将会奖励的ERC20的代币地址，第二个是这个合约真正开始工作的时间，就是一个时间戳。Factory合约维护多个抵押奖励的池子，因为它可以支持不同的ERC20代币作为抵押，但是奖励的代币只有一种，就是constructor传递的那个奖励代币。
 
 每一个抵押的奖励池子，对应不同的stake代币，比如deploy了两个不同的stake 代币，那么就对应有两个`StakeReward`合约的地址，StakeReward合约是deploy方法里面动态new创建的。StakeReward于stake代币一一对应。
@@ -13,6 +17,8 @@ This is the canonical staking contract designed for [Uniswap V3](https://github.
 如果要抵押stake你想要的代币获取流动性挖矿奖励，需要拿到对应的stake代币的奖励池合约的地址(StakeReward合约地址),然后调用其的stake方法，经过一段时间以后，再调用getward函数获取奖励代币。或者调用exit方法，获取奖励代币的同时，也提取你所欲的抵押的代币赎回。
 
 LP token就是Uni-V2的代币，也就是UniswapV2ERC20。这个代币表示流动性的凭证。
+
+
 
 ## Get Started && How to simply use
 
