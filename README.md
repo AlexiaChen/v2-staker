@@ -13,6 +13,10 @@ This is the canonical staking contract designed for [Uniswap V3](https://github.
 
 如果要抵押stake你想要的代币获取流动性挖矿奖励，需要拿到对应的stake代币的奖励池合约的地址(StakeReward合约地址),然后调用其的stake方法，经过一段时间以后，再调用getward函数获取奖励代币。或者调用exit方法，获取奖励代币的同时，也提取你所欲的抵押的代币赎回。
 
+
+![](images/pool.png)
+
+
 LP token就是Uni-V2的代币，也就是UniswapV2ERC20。这个代币表示流动性的凭证。
 
 
