@@ -32,8 +32,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: create env file
-      run: |
-        cp .env.example .env
+        run: cp .env.example .env
 
       # This is required separately from yarn test because it generates the typechain definitions
       - name: Compile
