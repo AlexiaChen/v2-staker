@@ -1,10 +1,6 @@
 const { loadFixture} = require("@nomicfoundation/hardhat-network-helpers");
 const { expect } = require("chai");
-const { BigNumber } = require("ethers");
 const { ethers, network } = require("hardhat");
-const { delay } = require("lodash");
-//const { waffle } = require("hardhat");
-//const { deployMockContract, provider } = waffle;
 
 describe("Staker contract", function () {
   async function deployTokenFixture() {
@@ -157,7 +153,6 @@ describe("Staker contract", function () {
     expect(await StakingRewardsContract.balanceOf(user1.address)).to.equal(userStakingAmount);
     expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(totalSupply);
    
-    
     // 拿取奖励前
     expect(await hreMockReward.balanceOf(user1.address)).to.equal(0);
     
@@ -168,25 +163,26 @@ describe("Staker contract", function () {
 
     const blockNumBefore = await ethers.provider.getBlockNumber();
     const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-    console.log("blockBefore %s", blockBefore.timestamp);
+    console.log("blockBefore timestamp %s and waiting for a while...", blockBefore.timestamp);
 
     await hreStakingRedwardsFactory.notifyRewardAmounts();
     // 延迟一段时间，拿取奖励
     this.timeout(5*60*1000);
     await wait(1000*60*1);
     
-    console.log("from test: owner address %s, user1 address %s", owner.address, user1.address);
-  
     const blockNumAfter = await ethers.provider.getBlockNumber();
     const blockAfter = await ethers.provider.getBlock(blockNumAfter);
-    console.log("blockAfter %s", blockAfter.timestamp);
+    console.log("blockAfter timestamp %s", blockAfter.timestamp);
     
     await StakingRewardsContract.withdraw(1000);
-
-    this.timeout(1*60*1000);
+    console.log("waiting for a while...");
+    this.timeout(2*60*1000);
     await wait(1000*30);
-
     await StakingRewardsContract.withdraw(1000);
+
+    // 又切换成自动挖矿，这样一些状态变化才可以跟上单元测试的运行速度，不然转账会接收失败，因为成功是等待交易上链，如果间隔挖矿，转账完成后，立刻就去校验，账户余额，肯定是不对的
+    await network.provider.send("evm_setAutomine", [true]);
+    await network.provider.send("evm_setIntervalMining", [0]);
 
     expect(await StakingRewardsContract.lastTimeRewardApplicable()).to.gt(blockBefore.timestamp);
     expect(await StakingRewardsContract.rewardRate()).to.gt(0);
@@ -194,9 +190,11 @@ describe("Staker contract", function () {
     expect(await StakingRewardsContract.rewardPerToken()).to.gt(0);
     expect(await StakingRewardsContract.earned(user1.address)).to.gt(0);
     expect(await StakingRewardsContract.connect(user1).getReward()).to.emit(StakingRewardsContract, "RewardPaid");
-   
-    // expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
+    expect(await hreMockReward.balanceOf(user1.address)).to.gt(0);
 
-
+    // exit
+    expect(await StakingRewardsContract.balanceOf(user1.address)).to.gt(0);
+    expect(await StakingRewardsContract.connect(user1).exit()).to.emit(StakingRewardsContract, "Withdrawn").emit(StakingRewardsContract, "RewardPaid");
+    expect(await StakingRewardsContract.balanceOf(user1.address)).to.equal(0);
   });
 });
