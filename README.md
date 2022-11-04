@@ -1,5 +1,8 @@
 # uniswap-v2-staker
 
+![unit test](https://github.com/FiiLabs/v2-staker/actions/workflows/tests.yml/badge.svg)
+[![Github tag](https://badgen.net/github/tag/FiiLabs/v2-staker)](https://github.com/FiiLabs/v2-staker/tags/)
+
 This is the canonical staking contract designed for [Uniswap V3](https://github.com/Uniswap/uniswap-v3-core).
 
 ## Arch
