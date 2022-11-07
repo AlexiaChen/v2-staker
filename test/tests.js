@@ -258,13 +258,8 @@ describe("Staker contract", function () {
       const duration = 3*60; // 3 minutes
       const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
       expect(count).to.equal(0);
-      expect(3).to.equal(accounts.length);
-      function getOccurrence(array, value) {
-        var count = 0;
-        array.forEach((v) => (v === value && count++));
-        return count;
-      }
-      expect(getOccurrence(accounts, "0x0000000000000000000000000000000000000000")).to.equal(3);
+      expect(count).to.equal(accounts.length);
+      expect(accounts.includes("0x0000000000000000000000000000000000000000")).to.equal(false);
     }
 
     {
@@ -298,6 +293,12 @@ describe("Staker contract", function () {
       expect(accounts.includes(addr2.address)).to.equal(false);
       expect(accounts.includes(addr1.address)).to.equal(false);
       expect(accounts.includes(addr3.address)).to.equal(true);
+    }
+
+    {
+      await StakingRewardsContract.connect(addr3).exit();
+      const duration = 20; 
+      await expect(StakingRewardsContract.getAccountsByStakingDuration(duration)).to.be.revertedWith("valid stakers array has no one");
     }
 
   });

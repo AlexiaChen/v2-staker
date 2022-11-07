@@ -142,6 +142,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     function _removeValidStaker(uint index) private {
         require(index < validStakers.length, "valid staker index not valid.");
         validStakers[index] = validStakers[validStakers.length - 1];
+        _indexOfAccounts[validStakers[index]] = index;
         validStakers.pop();
     }
 
@@ -181,7 +182,12 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
             }
         }
 
-        return (_addresses, count);
+        address[] memory _results = new address[](count);
+        for(uint i = 0; i < _results.length; i++) {
+            _results[i] = _addresses[i];
+        }
+        
+        return (_results, count);
     }
 
     /* ========== RESTRICTED FUNCTIONS ========== */
