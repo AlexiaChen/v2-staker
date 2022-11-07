@@ -4,7 +4,7 @@ const { ethers, network } = require("hardhat");
 
 describe("Staker contract", function () {
   async function deployTokenFixture() {
-    const [owner, addr1, addr2] = await ethers.getSigners();
+    const [owner, addr1, addr2, addr3] = await ethers.getSigners();
     
     //// UniswapV2ERC20 token
     const uniswapERC20Token = await ethers.getContractFactory("UniswapV2ERC20");
@@ -38,7 +38,7 @@ describe("Staker contract", function () {
     console.log("StakingRewardsFactory address is:", hreStakingRedwardsFactory.address);
 
     // Fixtures can return anything you consider useful for your tests
-    return { hreUniswapERC20Token, hreStakingRedwardsFactory, hreMockReward, hreMockStaking, owner, addr1, addr2 };
+    return { hreUniswapERC20Token, hreStakingRedwardsFactory, hreMockReward, hreMockStaking, owner, addr1, addr2, addr3 };
   }
 
   it("My Reward ERC20 Token", async function () {
@@ -196,5 +196,109 @@ describe("Staker contract", function () {
     expect(await StakingRewardsContract.balanceOf(user1.address)).to.gt(0);
     expect(await StakingRewardsContract.connect(user1).exit()).to.emit(StakingRewardsContract, "Withdrawn").emit(StakingRewardsContract, "RewardPaid");
     expect(await StakingRewardsContract.balanceOf(user1.address)).to.equal(0);
+  });
+
+  it("test get valid stakers method", async function () {
+    const { hreStakingRedwardsFactory, hreMockStaking, hreMockReward, owner, addr1, addr2, addr3} = await loadFixture(deployTokenFixture);
+    
+    const rewardAmount = 10000000000;
+    await hreStakingRedwardsFactory.deploy(hreMockStaking.address, rewardAmount);
+    const transferAmount = 50000000000;
+    await hreMockReward.transfer(hreStakingRedwardsFactory.address, transferAmount);
+
+    this.timeout(10*1000);
+    await wait(1000*6);
+    await hreStakingRedwardsFactory.notifyRewardAmounts();
+
+    const [ stakingRewards ] = await hreStakingRedwardsFactory.stakingRewardsInfoByStakingToken(hreMockStaking.address);
+    expect(await hreMockReward.balanceOf(stakingRewards)).to.equal(rewardAmount);
+    const StakingRewardsContract  = await (await ethers.getContractFactory("StakingRewards")).attach(stakingRewards);
+
+    expect(await hreMockStaking.balanceOf(addr1.address)).to.equal(0);
+    expect(await hreMockStaking.balanceOf(addr2.address)).to.equal(0);
+    expect(await hreMockStaking.balanceOf(addr3.address)).to.equal(0);
+
+    await hreMockStaking.transfer(addr1.address, 1000);
+    await hreMockStaking.transfer(addr2.address, 1000);
+    await hreMockStaking.transfer(addr3.address, 1000);
+
+    await hreMockStaking.connect(addr1).approve(StakingRewardsContract.address, 1000);
+    await hreMockStaking.connect(addr2).approve(StakingRewardsContract.address, 1000);
+    await hreMockStaking.connect(addr3).approve(StakingRewardsContract.address, 1000);
+
+    await StakingRewardsContract.connect(addr1).stake(50);
+    await StakingRewardsContract.connect(addr2).stake(50);
+    await StakingRewardsContract.connect(addr3).stake(50);
+    expect(await StakingRewardsContract.validStakers(0)).to.equal(addr1.address);
+    expect(await StakingRewardsContract.validStakers(1)).to.equal(addr2.address);
+    expect(await StakingRewardsContract.validStakers(2)).to.equal(addr3.address);
+
+    await network.provider.send("evm_setAutomine", [false]);
+    await network.provider.send("evm_setIntervalMining", [2000]);
+
+    // 延迟一段时间，测试
+    this.timeout(5*60*1000);
+    await wait(1000*60*2);
+
+    await network.provider.send("evm_setAutomine", [true]);
+    await network.provider.send("evm_setIntervalMining", [0]);
+
+    {
+      const duration = 10; // 10 seconds
+      const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
+      expect(count).to.equal(3);
+      expect(count).to.equal(accounts.length);
+      expect(accounts.includes(addr1.address)).to.equal(true);
+      expect(accounts.includes(addr2.address)).to.equal(true);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+
+    }
+   
+    {
+      const duration = 3*60; // 3 minutes
+      const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
+      expect(count).to.equal(0);
+      expect(3).to.equal(accounts.length);
+      function getOccurrence(array, value) {
+        var count = 0;
+        array.forEach((v) => (v === value && count++));
+        return count;
+      }
+      expect(getOccurrence(accounts, "0x0000000000000000000000000000000000000000")).to.equal(3);
+    }
+
+    {
+      await StakingRewardsContract.connect(addr3).withdraw(20);
+      const duration = 20; 
+      const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
+      expect(count).to.equal(3);
+      expect(count).to.equal(accounts.length);
+      expect(accounts.includes(addr1.address)).to.equal(true);
+      expect(accounts.includes(addr2.address)).to.equal(true);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+    }
+
+    {
+      await StakingRewardsContract.connect(addr2).withdraw(50);
+      const duration = 20; 
+      const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
+      expect(count).to.equal(2);
+      expect(count).to.equal(accounts.length);
+      expect(accounts.includes(addr2.address)).to.equal(false);
+      expect(accounts.includes(addr1.address)).to.equal(true);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+    }
+
+    {
+      await StakingRewardsContract.connect(addr1).exit();
+      const duration = 20; 
+      const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
+      expect(count).to.equal(1);
+      expect(count).to.equal(accounts.length);
+      expect(accounts.includes(addr2.address)).to.equal(false);
+      expect(accounts.includes(addr1.address)).to.equal(false);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+    }
+
   });
 });

@@ -24,4 +24,7 @@ interface IStakingRewards {
     function getReward() external;
 
     function exit() external;
+
+    // stand-alone method for getting stakers for staking a period of time
+    function getAccountsByStakingDuration(uint256 duration) external view returns (address [] memory, uint);
 }

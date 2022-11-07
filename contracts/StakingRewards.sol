@@ -30,6 +30,10 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
 
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
+    
+    address [] public validStakers;
+    mapping(address => uint256) private _stakeTimeStamp;
+    mapping(address => uint) private _indexOfAccounts; // for valid stakers
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -99,8 +103,12 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     function stake(uint256 amount) external nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply.add(amount);
+
+        _entryStake(msg.sender);
+
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+               
         emit Staked(msg.sender, amount);
     }
 
@@ -109,6 +117,9 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
         stakingToken.safeTransfer(msg.sender, amount);
+        
+        _leaveStake(msg.sender);
+        
         emit Withdrawn(msg.sender, amount);
     }
 
@@ -124,6 +135,53 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     function exit() external {
         withdraw(_balances[msg.sender]);
         getReward();
+    }
+
+    // https://ethereum.stackexchange.com/questions/1527/how-to-delete-an-element-at-a-certain-index-in-an-array
+    // https://ethereum.stackexchange.com/questions/35790/efficient-approach-to-delete-element-from-array-in-solidity 
+    function _removeValidStaker(uint index) private {
+        require(index < validStakers.length, "valid staker index not valid.");
+        validStakers[index] = validStakers[validStakers.length - 1];
+        validStakers.pop();
+    }
+
+    function _entryStake(address account) private {
+        if (_balances[account] == 0) {
+            validStakers.push(account);
+            _indexOfAccounts[account] = validStakers.length - 1;
+            _stakeTimeStamp[account] = block.timestamp;
+        }
+    }
+
+    function _leaveStake(address account) private {
+        if (_balances[account] == 0) {
+            uint index = _indexOfAccounts[account];
+            _removeValidStaker(index);
+            _stakeTimeStamp[account] = 0;
+        }
+    }
+
+    /// refers to IStakingRewards interface
+    /// param duration: seconds of a period of time
+    function getAccountsByStakingDuration(uint256 duration) external view returns (address [] memory, uint) {
+        require(validStakers.length > 0, "valid stakers array has no one");
+        uint256 currentTimeStamp = block.timestamp;
+        uint count = 0;
+        address[] memory _addresses = new address[](validStakers.length);
+        for(uint i = 0; i < validStakers.length; i++) {
+            address currentAccount = validStakers[i];
+            uint256 stakeTimeStamp = _stakeTimeStamp[currentAccount];
+            if( stakeTimeStamp > 0) {
+                require(currentTimeStamp >=  stakeTimeStamp, "current block timestamp must greater than stake timestamp");
+                uint256 currentDuration = currentTimeStamp - stakeTimeStamp;
+                if (currentDuration >= duration) {
+                    _addresses[count] = currentAccount;
+                    count++;
+                }
+            }
+        }
+
+        return (_addresses, count);
     }
 
     /* ========== RESTRICTED FUNCTIONS ========== */
