@@ -26,6 +26,8 @@ LP token就是Uni-V2的代币，也就是UniswapV2ERC20。这个代币表示流�
 
 ## Get Started && How to simply use
 
+### 1. 流动性挖矿
+
 0. 先给Factory合约的地址充钱，充My Reward ERC20(MRT)代币的钱。
 
 1. 首先，拥有owner权限的account调用Factory的`deploy`方法，传递流动性挖矿需要支持的抵押ERC20代币合约的地址，和奖励的额度。首先，Factory工厂合约要有reward ERC20代币的余额，不然奖励池没法进行工作。所以再次之前，先确认Factory合约的地址下，有一定数量的MRT这个ERC20 代币(My Reeward Token)。这个数量的代币，`deploy`(`stake erc20 token address`, `reward Amount`) rewardAmount
@@ -33,6 +35,11 @@ LP token就是Uni-V2的代币，也就是UniswapV2ERC20。这个代币表示流�
 2. 然后调用Factory合约的 `notifyRewardAmounts()` 或者 `notifyRewardAmount(address MST token)`，通知并向流动性矿池转之前`deploy`时候设置的`rewardAmount`这个数量的代币。并开始进行60天的奖励周期，奖励开始计算。
 
 3. 现在就可以使用StakingRewards的合约接口，比如用`stake`方法MST代币了，`getReward`方法提取质押期间所获得的MRT奖励。如果要提取抵押的MST的代币，可以用withdraw方法。用exit方法更直接，提取MRT奖励的同时也提取抵押的MST存款。
+
+### 2. 获取质押已经达到N秒的用户地址
+
+- `getAccountsByStakingDuration(uint256 duration)`， `duration`参数是N秒，方法返回质押至少达到N秒时长的用户地址数组和数组长度。`（address []accounts, uint count）`
+
 
 ## Development and Testing
 
