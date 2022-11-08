@@ -54,14 +54,19 @@ yarn test
 
 ### Goerli Tesnet
 
-#### v1 (deprecated)
+#### v3
+
+这个版本增加了[这个](docs/distribute-ball-design.md) 功能。
 
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
-- <del> UniswapV2ERC20 address is: `0x2e22a0114F829179BeCa340523aCdD7A4bd3A045` (not verified) </del>
-- <del> My Reward ERC20 Token address is: `0x7ba75561E982A33F88C70259acB4759f186afe3F` (not verified) </del>
-- <del> My Staking ERC20 Token address is: `0x623e205bAa59b24990df9B5d27343286Da9880bf` (not verified) </del>
-- <del> StakingRewardsFactory address is: `0xd8914251939A3dc14a24D5e8dB72DEC4a669A673` (not verified) </del> 
+- StakingRewardsFactory address `0x4C8f539D0CC987E72a001E77456d10c5A046C8BF` https://goerli.etherscan.io/address/0x4c8f539d0cc987e72a001e77456d10c5a046c8bf
+   - constructor(`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`， `1667871156`)
+
+Deployed Staking Rewards pool:
+
+- StakingRewards address(UniswapV2Pair) `0xb7010d3AEFa27A7B5eF9FC78bEC472E9D9204829` https://goerli.etherscan.io/address/0xb7010d3AEFa27A7B5eF9FC78bEC472E9D9204829
+   - constructor(`0x4C8f539D0CC987E72a001E77456d10c5A046C8BF`, `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0xFC5EB7FDd4d1Af0CEAf9B2b2E40CD8085A31c280`) 
 
 #### v2
 
@@ -81,19 +86,14 @@ Deployed Staking Rewards pool：
 - StakingRewards address(UniswapV2Pair) `0xc3f204df7bd5823031e264ddb3a45b6c3aca4885` (veridied on etherscan) https://goerli.etherscan.io/address/0xc3f204df7bd5823031e264ddb3a45b6c3aca4885
    - constructor(`0xF0335B3F3baa36E32dfA5dFcC224C5D5c4654081`, `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0xFC5EB7FDd4d1Af0CEAf9B2b2E40CD8085A31c280`) 
 
-#### v3
-
-这个版本增加了[这个](docs/distribute-ball-design.md) 功能。
+#### v1 (deprecated)
 
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
-- StakingRewardsFactory address `0x4C8f539D0CC987E72a001E77456d10c5A046C8BF` https://goerli.etherscan.io/address/0x4c8f539d0cc987e72a001e77456d10c5a046c8bf
-   - constructor(`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`， `1667871156`)
-
-Deployed Staking Rewards pool:
-
-- StakingRewards address(UniswapV2Pair) `0xb7010d3AEFa27A7B5eF9FC78bEC472E9D9204829` https://goerli.etherscan.io/address/0xb7010d3AEFa27A7B5eF9FC78bEC472E9D9204829
-   - constructor(`0x4C8f539D0CC987E72a001E77456d10c5A046C8BF`, `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0xFC5EB7FDd4d1Af0CEAf9B2b2E40CD8085A31c280`) 
+- <del> UniswapV2ERC20 address is: `0x2e22a0114F829179BeCa340523aCdD7A4bd3A045` (not verified) </del>
+- <del> My Reward ERC20 Token address is: `0x7ba75561E982A33F88C70259acB4759f186afe3F` (not verified) </del>
+- <del> My Staking ERC20 Token address is: `0x623e205bAa59b24990df9B5d27343286Da9880bf` (not verified) </del>
+- <del> StakingRewardsFactory address is: `0xd8914251939A3dc14a24D5e8dB72DEC4a669A673` (not verified) </del> 
 
 ## Deploy
 
