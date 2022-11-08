@@ -51,6 +51,12 @@ function getUsersForProfits() address [] public {
 
 - 实现PR https://github.com/FiiLabs/v2-staker/pull/1
 
+就此方案目前的实现来说，对每个质押用户按秒来计时，从最开始入场，到完全退场为开始时间和结束时间来统计。
+
+最开始入场： 之前没有任何抵押，也就是在StakingRewards的池子中用户的抵押余额为0。
+
+完全退场： 把质押的余额完全取出，余额为0。
+
 ### 方案三
 
 如果是不用回购Ball的机制，那么势必让池子多管理一份ERC20的代币，造成不必要的复杂，工作量和测试也会相应增多。这个方案不推荐实现。
