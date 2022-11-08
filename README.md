@@ -5,6 +5,8 @@
 
 This is the canonical staking contract designed for [Uniswap V3](https://github.com/Uniswap/uniswap-v3-core).
 
+> 这里做一下说明，虽然fork的是UniswapV3的staker，但是没有使用任何v3 staker的代码，而是v2的，v2的staker，我调查过，上线过一段时间又下线了。https://github.com/Uniswap/liquidity-staker 不知道是什么问题，仓库会被归档。我把v2的staker的合约代码拷贝过来使用的。
+
 ## Arch
 
 
