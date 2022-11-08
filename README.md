@@ -54,7 +54,7 @@ yarn test
 
 ### Goerli Tesnet
 
-v1 (deprecated):
+#### v1 (deprecated)
 
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
@@ -63,7 +63,7 @@ Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c
 - <del> My Staking ERC20 Token address is: `0x623e205bAa59b24990df9B5d27343286Da9880bf` (not verified) </del>
 - <del> StakingRewardsFactory address is: `0xd8914251939A3dc14a24D5e8dB72DEC4a669A673` (not verified) </del> 
 
-v2:
+#### v2
 
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
@@ -80,7 +80,18 @@ Deployed Staking Rewards pool：
 
 - StakingRewards address(UniswapV2Pair) `0xc3f204df7bd5823031e264ddb3a45b6c3aca4885` (veridied on etherscan) https://goerli.etherscan.io/address/0xc3f204df7bd5823031e264ddb3a45b6c3aca4885
    - constructor(`0xF0335B3F3baa36E32dfA5dFcC224C5D5c4654081`, `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0xFC5EB7FDd4d1Af0CEAf9B2b2E40CD8085A31c280`) 
-  
+
+#### v3
+
+Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
+
+- StakingRewardsFactory address `0x4C8f539D0CC987E72a001E77456d10c5A046C8BF` https://goerli.etherscan.io/address/0x4c8f539d0cc987e72a001e77456d10c5a046c8bf
+   - constructor(`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`， `1667871156`)
+
+Deployed Staking Rewards pool:
+
+- StakingRewards address(UniswapV2Pair) `0xb7010d3AEFa27A7B5eF9FC78bEC472E9D9204829` https://goerli.etherscan.io/address/0xb7010d3AEFa27A7B5eF9FC78bEC472E9D9204829
+   - constructor(`0x4C8f539D0CC987E72a001E77456d10c5A046C8BF`, `0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `0xFC5EB7FDd4d1Af0CEAf9B2b2E40CD8085A31c280`) 
 
 ## Deploy
 
@@ -92,9 +103,13 @@ yarn localnode # to run a local node for hardhat network
 yarn deploy:hardhat # deploy contracts to hardhat
 ```
 
-
-
 Or you can use remix IDE for deploying, Flattening solidity file and upload files to REMIX IDE to compile, deploy.
+
+只需要部署StakingRewardsFactory即可，通过Factory部署想要质押的ERC20代币的矿池。
+
+```bash
+multisol ./contracts/StakingRewardsFactory.sol # for flattening sol
+```
 
 ## 基于官方资料的一点分析
 
