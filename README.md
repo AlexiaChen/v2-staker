@@ -83,6 +83,8 @@ Deployed Staking Rewards pool：
 
 #### v3
 
+这个版本增加了[这个](docs/distribute-ball-design.md) 功能。
+
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
 - StakingRewardsFactory address `0x4C8f539D0CC987E72a001E77456d10c5A046C8BF` https://goerli.etherscan.io/address/0x4c8f539d0cc987e72a001e77456d10c5a046c8bf
