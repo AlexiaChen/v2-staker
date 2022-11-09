@@ -191,7 +191,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     }
 
     /* ========== RESTRICTED FUNCTIONS ========== */
-
+    // ony rewardsDistribution call this method
     function notifyRewardAmount(uint256 reward) external onlyRewardsDistribution updateReward(address(0)) {
         if (block.timestamp >= periodFinish) {
             rewardRate = reward.div(rewardsDuration);
