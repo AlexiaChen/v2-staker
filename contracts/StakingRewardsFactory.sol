@@ -90,6 +90,7 @@ contract StakingRewardsFactory is Ownable {
     function notifyRewardAmount2(address stakingToken, uint256 rewardDuration, uint256 _rewardAmount) public onlyOwner {
         require(block.timestamp >= stakingRewardsGenesis, 'StakingRewardsFactory::notifyRewardAmount: not ready');
         require(rewardDuration > 0, 'rewardDuration Must not zero');
+        require(_rewardAmount > 0, 'rewardAmount must not zero');
 
         StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
         require(info.stakingRewards != address(0), 'StakingRewardsFactory::notifyRewardAmount: not deployed');
