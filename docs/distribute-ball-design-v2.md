@@ -8,6 +8,8 @@ Doc status: Reviewed && implemented
 
 ## 实现
 
+实现PR https://github.com/FiiLabs/v2-staker/pull/3
+
 这里应该是我目前可以想到的最直接简单的实现。
 
 其实如果仔细分析，其实第二个附带的这个安全上的系数需求，目前就是可以满足的，获取用户的权重占比是可以做的。并且为了灵活性，我们后面测试的合约可以删除`StakingRewardsFactory.sol`这个合约。因为这个合约的限制太多，是`StakingRewards.sol`的工厂合约，是上层的直接简单封装，我们以后可以直接使用StakingRewardss.sol这个单币质押池子的合约，有多少个需要stake的代币，就部署这个合约的多少个实例，只是参数不一样。
