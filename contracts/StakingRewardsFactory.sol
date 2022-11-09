@@ -60,7 +60,9 @@ contract StakingRewardsFactory is Ownable {
         require(stakingTokens.length > 0, 'StakingRewardsFactory::notifyRewardAmounts: called before any deploys');
         uint256 REWARD_DURATION = 60 days; 
         for (uint i = 0; i < stakingTokens.length; i++) {
-            notifyRewardAmount2(stakingTokens[i], REWARD_DURATION);
+            address stakingToken = stakingTokens[i];
+            StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
+            notifyRewardAmount2(stakingToken, REWARD_DURATION, info.rewardAmount);
         }
     }
 
@@ -85,7 +87,7 @@ contract StakingRewardsFactory is Ownable {
        // }
     }
 
-    function notifyRewardAmount2(address stakingToken, uint256 rewardDuration) public onlyOwner {
+    function notifyRewardAmount2(address stakingToken, uint256 rewardDuration, uint256 _rewardAmount) public onlyOwner {
         require(block.timestamp >= stakingRewardsGenesis, 'StakingRewardsFactory::notifyRewardAmount: not ready');
         require(rewardDuration > 0, 'rewardDuration Must not zero');
 
@@ -93,7 +95,7 @@ contract StakingRewardsFactory is Ownable {
         require(info.stakingRewards != address(0), 'StakingRewardsFactory::notifyRewardAmount: not deployed');
         
         //if (info.rewardAmount > 0) {
-            uint rewardAmount = info.rewardAmount;
+            uint rewardAmount = _rewardAmount;
         //    info.rewardAmount = 0;
             require(
                 IERC20(rewardsToken).transfer(info.stakingRewards, rewardAmount),
