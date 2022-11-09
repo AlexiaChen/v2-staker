@@ -190,9 +190,72 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         return (_results, count);
     }
 
+
+    function getValidStakersWithWeight() external view returns (address [] memory, uint256 [] memory, uint256 [] memory, uint) {
+        require(validStakers.length > 0, "valid stakers array has no one");
+        uint256 currentTimeStamp = block.timestamp;
+        uint count = 0;
+        address[] memory _addresses = new address[](validStakers.length);
+        uint256[] memory _balancesWeight = new uint256[](validStakers.length);
+        uint256[] memory _timeDurationWeight = new uint256[](validStakers.length);
+        for (uint i = 0; i < validStakers.length; i++) {
+            address currentAccount = validStakers[i];
+            uint256 stakeTimeStamp = _stakeTimeStamp[currentAccount];
+            if (currentTimeStamp > stakeTimeStamp) {
+                uint256 balance = _balances[currentAccount];
+                // https://ethereum.stackexchange.com/questions/55701/how-to-do-solidity-percentage-calculation
+                uint256 balanceWeight = balance.mul(1e18).div(_totalSupply);
+                uint256 timeDuration = currentTimeStamp - stakeTimeStamp;
+                uint256 timeDurationWeight = timeDuration.mul(1e18).div(rewardsDuration);
+
+               _addresses[count] = currentAccount;
+               _balancesWeight[count] = balanceWeight;
+               _timeDurationWeight[count] = timeDurationWeight;
+               count++;
+
+            }
+        }
+
+        address[] memory addresses_result = new address[](count);
+        uint256[] memory balance_weight_result = new uint256[](count);
+        uint256[] memory timeduration_weight_result = new uint256[](count);
+        for(uint i = 0; i < count; i++) {
+            addresses_result[i] = _addresses[i];
+            balance_weight_result[i] = _balancesWeight[i];
+            timeduration_weight_result[i] = _timeDurationWeight[i];
+        }
+
+        return (addresses_result, balance_weight_result, timeduration_weight_result, count);
+    }
+
     /* ========== RESTRICTED FUNCTIONS ========== */
     // ony rewardsDistribution call this method
     function notifyRewardAmount(uint256 reward) external onlyRewardsDistribution updateReward(address(0)) {
+        if (block.timestamp >= periodFinish) {
+            rewardRate = reward.div(rewardsDuration);
+        } else {
+            uint256 remaining = periodFinish.sub(block.timestamp);
+            uint256 leftover = remaining.mul(rewardRate);
+            rewardRate = reward.add(leftover).div(rewardsDuration);
+        }
+
+        // Ensure the provided reward amount is not more than the balance in the contract.
+        // This keeps the reward rate in the right range, preventing overflows due to
+        // very high values of rewardRate in the earned and rewardsPerToken functions;
+        // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
+        uint balance = rewardsToken.balanceOf(address(this));
+        require(rewardRate <= balance.div(rewardsDuration), "Provided reward too high");
+
+        lastUpdateTime = block.timestamp;
+        periodFinish = block.timestamp.add(rewardsDuration);
+        emit RewardAdded(reward);
+    }
+
+    // Almost same as notifyRewardAmount
+    function notifyRewardAmount2(uint256 _rewardDuration, uint256 _rewardAmount) external onlyRewardsDistribution updateReward(address(0)) {
+        rewardsDuration = _rewardDuration;
+        uint256 reward = _rewardAmount;
+
         if (block.timestamp >= periodFinish) {
             rewardRate = reward.div(rewardsDuration);
         } else {

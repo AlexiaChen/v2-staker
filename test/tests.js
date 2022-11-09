@@ -253,6 +253,25 @@ describe("Staker contract", function () {
       expect(accounts.includes(addr3.address)).to.equal(true);
 
     }
+
+    {
+      const [accounts, balance_w, time_w, count] = await StakingRewardsContract.getValidStakersWithWeight();
+      expect(count).to.equal(3);
+      expect(count).to.equal(accounts.length);
+      expect(count).to.equal(balance_w.length);
+      expect(count).to.equal(time_w.length);
+      expect(accounts.includes(addr1.address)).to.equal(true);
+      expect(accounts.includes(addr2.address)).to.equal(true);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+      
+      expect(balance_w[0]).to.gt(0);
+      expect(balance_w[1]).to.gt(0);
+      expect(balance_w[2]).to.gt(0);
+
+      expect(time_w[0]).to.gt(0);
+      expect(time_w[1]).to.gt(0);
+      expect(time_w[2]).to.gt(0);
+    }
    
     {
       const duration = 3*60; // 3 minutes
@@ -274,6 +293,24 @@ describe("Staker contract", function () {
     }
 
     {
+      const [accounts, balance_w, time_w, count] = await StakingRewardsContract.getValidStakersWithWeight();
+      expect(count).to.equal(3);
+      expect(count).to.equal(accounts.length);
+      expect(count).to.equal(balance_w.length);
+      expect(count).to.equal(time_w.length);
+      expect(accounts.includes(addr1.address)).to.equal(true);
+      expect(accounts.includes(addr2.address)).to.equal(true);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+      
+      expect(balance_w[0]).to.gt(0);
+      expect(balance_w[1]).to.gt(0);
+      expect(balance_w[2]).to.gt(0);
+      expect(time_w[0]).to.gt(0);
+      expect(time_w[1]).to.gt(0);
+      expect(time_w[2]).to.gt(0);
+    }
+
+    {
       await StakingRewardsContract.connect(addr2).withdraw(50);
       const duration = 20; 
       const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
@@ -285,6 +322,22 @@ describe("Staker contract", function () {
     }
 
     {
+      const [accounts, balance_w, time_w, count] = await StakingRewardsContract.getValidStakersWithWeight();
+      expect(count).to.equal(2);
+      expect(count).to.equal(accounts.length);
+      expect(count).to.equal(balance_w.length);
+      expect(count).to.equal(time_w.length);
+      expect(accounts.includes(addr1.address)).to.equal(true);
+      expect(accounts.includes(addr2.address)).to.equal(false);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+      
+      expect(balance_w[0]).to.gt(0);
+      expect(balance_w[1]).to.gt(0);
+      expect(time_w[0]).to.gt(0);
+      expect(time_w[1]).to.gt(0);  
+    }
+
+    {
       await StakingRewardsContract.connect(addr1).exit();
       const duration = 20; 
       const [accounts, count] = await StakingRewardsContract.getAccountsByStakingDuration(duration);
@@ -293,6 +346,20 @@ describe("Staker contract", function () {
       expect(accounts.includes(addr2.address)).to.equal(false);
       expect(accounts.includes(addr1.address)).to.equal(false);
       expect(accounts.includes(addr3.address)).to.equal(true);
+    }
+
+    {
+      const [accounts, balance_w, time_w, count] = await StakingRewardsContract.getValidStakersWithWeight();
+      expect(count).to.equal(1);
+      expect(count).to.equal(accounts.length);
+      expect(count).to.equal(balance_w.length);
+      expect(count).to.equal(time_w.length);
+      expect(accounts.includes(addr1.address)).to.equal(false);
+      expect(accounts.includes(addr2.address)).to.equal(false);
+      expect(accounts.includes(addr3.address)).to.equal(true);
+      
+      expect(balance_w[0]).to.gt(0);
+      expect(time_w[0]).to.gt(0);
     }
 
     {

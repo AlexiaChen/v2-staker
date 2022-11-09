@@ -1,3 +1,5 @@
+Doc status: Reviewed && implemented
+
 ## 背景介绍
 
 由于流动性挖矿之前新做了一个[需求](./distribute-ball-design.md) 不满足客户要求，客户要求要获取目前正在质押的用户的占比权重(质押时间占比和质押数额占比)。所以需要对之前提到的[方案二](https://github.com/FiiLabs/v2-staker/blob/main/docs/distribute-ball-design.md#%E6%96%B9%E6%A1%88%E4%BA%8C-%E5%B7%B2%E9%80%89%E6%8B%A9%E8%BF%99%E4%B8%AA%E6%96%B9%E6%A1%88%E5%AE%9E%E7%8E%B0)的接口做修改，才可以满足。

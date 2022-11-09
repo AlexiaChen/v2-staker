@@ -49,24 +49,32 @@ contract StakingRewardsFactory is Ownable {
     ///// permissionless functions
 
     // call notifyRewardAmount for all staking tokens.
-    function notifyRewardAmounts() public {
+    function notifyRewardAmounts() public onlyOwner {
         require(stakingTokens.length > 0, 'StakingRewardsFactory::notifyRewardAmounts: called before any deploys');
         for (uint i = 0; i < stakingTokens.length; i++) {
             notifyRewardAmount(stakingTokens[i]);
         }
     }
 
+    function notifyRewardAmounts2() public onlyOwner {
+        require(stakingTokens.length > 0, 'StakingRewardsFactory::notifyRewardAmounts: called before any deploys');
+        uint256 REWARD_DURATION = 60 days; 
+        for (uint i = 0; i < stakingTokens.length; i++) {
+            notifyRewardAmount2(stakingTokens[i], REWARD_DURATION);
+        }
+    }
+
     // notify reward amount for an individual staking token.
     // this is a fallback in case the notifyRewardAmounts costs too much gas to call for all contracts
-    function notifyRewardAmount(address stakingToken) public {
+    function notifyRewardAmount(address stakingToken) public onlyOwner {
         require(block.timestamp >= stakingRewardsGenesis, 'StakingRewardsFactory::notifyRewardAmount: not ready');
 
         StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
         require(info.stakingRewards != address(0), 'StakingRewardsFactory::notifyRewardAmount: not deployed');
         
-        if (info.rewardAmount > 0) {
+       // if (info.rewardAmount > 0) {
             uint rewardAmount = info.rewardAmount;
-            info.rewardAmount = 0;
+       //     info.rewardAmount = 0;
             require(
                 IERC20(rewardsToken).transfer(info.stakingRewards, rewardAmount),
                 'StakingRewardsFactory::notifyRewardAmount: transfer failed'
@@ -74,6 +82,26 @@ contract StakingRewardsFactory is Ownable {
         
             StakingRewards(info.stakingRewards).notifyRewardAmount(rewardAmount);
             
-        }
+       // }
+    }
+
+    function notifyRewardAmount2(address stakingToken, uint256 rewardDuration) public onlyOwner {
+        require(block.timestamp >= stakingRewardsGenesis, 'StakingRewardsFactory::notifyRewardAmount: not ready');
+        require(rewardDuration > 0, 'rewardDuration Must not zero');
+
+        StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
+        require(info.stakingRewards != address(0), 'StakingRewardsFactory::notifyRewardAmount: not deployed');
+        
+        //if (info.rewardAmount > 0) {
+            uint rewardAmount = info.rewardAmount;
+        //    info.rewardAmount = 0;
+            require(
+                IERC20(rewardsToken).transfer(info.stakingRewards, rewardAmount),
+                'StakingRewardsFactory::notifyRewardAmount: transfer failed'
+            );
+        
+            StakingRewards(info.stakingRewards).notifyRewardAmount2(rewardDuration, rewardAmount);
+            
+       // }
     }
 }
