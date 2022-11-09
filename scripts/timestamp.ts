@@ -16,10 +16,11 @@ async function main() {
   // getting timestamp
   const blockNumBefore = await ethers.provider.getBlockNumber();
   const blockBefore = await ethers.provider.getBlock(blockNumBefore);
-  const timestamp = blockBefore.timestamp + 60*30;
+  const timestamp = blockBefore.timestamp + 60*5;
 
   console.log("current block number is ", blockNumBefore);
-  console.log("current block timestamp plus 30 min is ", timestamp)
+  console.log("current block timestamp is ",  blockBefore.timestamp);
+  console.log("current block timestamp plus 5 min is ", timestamp)
 
   }
   
