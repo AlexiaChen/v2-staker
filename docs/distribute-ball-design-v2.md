@@ -1,6 +1,6 @@
 ## 背景介绍
 
-由于流动性挖矿之前新做了一个[需求](./distribute-ball-design.md) 不满足客户要求，客户要求要获取目前正在质押的用户的占比权重(质押时间占比和质押数额占比)。所以需要对之前提到的方案二的接口做修改，才可以满足。
+由于流动性挖矿之前新做了一个[需求](./distribute-ball-design.md) 不满足客户要求，客户要求要获取目前正在质押的用户的占比权重(质押时间占比和质押数额占比)。所以需要对之前提到的[方案二](https://github.com/FiiLabs/v2-staker/blob/main/docs/distribute-ball-design.md#%E6%96%B9%E6%A1%88%E4%BA%8C-%E5%B7%B2%E9%80%89%E6%8B%A9%E8%BF%99%E4%B8%AA%E6%96%B9%E6%A1%88%E5%AE%9E%E7%8E%B0)的接口做修改，才可以满足。
 
 还有客户所说的有一个系数要乘上，不然池子的奖励很容易被掏空，我想这里是有的，在`StakingRewards.sol`中，`notifyRewardAmount(uint256 reward)`来通知矿池以什么数额的奖励开始瓜分奖励代币的时候，是有一个系数的，这个系数叫`rewardRate`，里面有一个断言语句 `  require(rewardRate <= balance.div(rewardsDuration), "Provided reward too high");` 意思就是防止在某个时间区间，奖励利率不合理的要求是不给通过的。我想这个就是客户所描述的“池子不能被一下子掏空"的原因。
 
