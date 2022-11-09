@@ -26,9 +26,9 @@ interface IStakingRewards {
     function exit() external;
 
     // stand-alone method for getting stakers for staking a period of time
-    function getAccountsByStakingDuration(uint256 duration) external view returns (address [] memory, uint);
+    // function getAccountsByStakingDuration(uint256 duration) external view returns (address [] memory, uint);
     // stand-alone method for get all valid stakers for their own weignht (stake balance weight and stake time weight)
-    function getValidStakersWithWeight() external view returns (address [] memory, uint256 [] memory, uint256 [] memory, uint);
+    // function getValidStakersWithWeight() external view returns (address [] memory, uint256 [] memory, uint256 [] memory, uint);
     // return weight for account (balanceWeight and timeDurationWeight)
-    function getWeight(address account) external view returns (uint256, uint256);
+    // function getWeight(address account) external view returns (uint256, uint256);
 }

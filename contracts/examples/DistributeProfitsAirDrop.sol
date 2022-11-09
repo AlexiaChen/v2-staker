@@ -17,23 +17,23 @@ contract DistributeProfitsAirDrop is Ownable {
 
     }
 
-    function transferBatchForThePool(address _stakingPool, IERC20 _profitToken, uint256 amount, uint256 duration) public onlyOwner {
-        require(_stakingPool != address(0), "stakingPool must none zero address");
-        require(amount > 0, "Profit amount for every valid staking person must greater than zero");
+    // function transferBatchForThePool(address _stakingPool, IERC20 _profitToken, uint256 amount, uint256 duration) public onlyOwner {
+    //     require(_stakingPool != address(0), "stakingPool must none zero address");
+    //     require(amount > 0, "Profit amount for every valid staking person must greater than zero");
 
-        IStakingRewards pool = (IStakingRewards)(_stakingPool);
-        (address [] memory accounts, uint count) = pool.getAccountsByStakingDuration(duration);
-        uint256 totalPaid = amount.mul(count);
-        if(count > 0) {
-            require(_profitToken.balanceOf(address(this)) > totalPaid, 
-                "The contract balance not enough.");
-            for(uint i = 0; i < count; i++) {
-                _profitToken.safeTransfer(accounts[i], amount);
-            }
+    //     IStakingRewards pool = (IStakingRewards)(_stakingPool);
+    //     (address [] memory accounts, uint count) = pool.getAccountsByStakingDuration(duration);
+    //     uint256 totalPaid = amount.mul(count);
+    //     if(count > 0) {
+    //         require(_profitToken.balanceOf(address(this)) > totalPaid, 
+    //             "The contract balance not enough.");
+    //         for(uint i = 0; i < count; i++) {
+    //             _profitToken.safeTransfer(accounts[i], amount);
+    //         }
 
-            emit ProfitsPaid(totalPaid);
-        }
-    }
+    //         emit ProfitsPaid(totalPaid);
+    //     }
+    // }
 
     event ProfitsPaid(uint256 paidProfits);
 }

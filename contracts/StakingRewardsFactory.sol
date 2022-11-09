@@ -58,11 +58,10 @@ contract StakingRewardsFactory is Ownable {
 
     function notifyRewardAmounts2() public onlyOwner {
         require(stakingTokens.length > 0, 'StakingRewardsFactory::notifyRewardAmounts: called before any deploys');
-        uint256 REWARD_DURATION = 60 days; 
         for (uint i = 0; i < stakingTokens.length; i++) {
             address stakingToken = stakingTokens[i];
             StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
-            notifyRewardAmount2(stakingToken, REWARD_DURATION, info.rewardAmount);
+            notifyRewardAmount2(stakingToken, info.rewardAmount);
         }
     }
 
@@ -87,9 +86,8 @@ contract StakingRewardsFactory is Ownable {
        // }
     }
 
-    function notifyRewardAmount2(address stakingToken, uint256 rewardDuration, uint256 _rewardAmount) public onlyOwner {
+    function notifyRewardAmount2(address stakingToken, uint256 _rewardAmount) public onlyOwner {
         require(block.timestamp >= stakingRewardsGenesis, 'StakingRewardsFactory::notifyRewardAmount: not ready');
-        require(rewardDuration > 0, 'rewardDuration Must not zero');
         require(_rewardAmount > 0, 'rewardAmount must not zero');
 
         StakingRewardsInfo storage info = stakingRewardsInfoByStakingToken[stakingToken];
@@ -103,7 +101,7 @@ contract StakingRewardsFactory is Ownable {
                 'StakingRewardsFactory::notifyRewardAmount: transfer failed'
             );
         
-            StakingRewards(info.stakingRewards).notifyRewardAmount2(rewardDuration, rewardAmount);
+            StakingRewards(info.stakingRewards).notifyRewardAmount(rewardAmount);
             
        // }
     }

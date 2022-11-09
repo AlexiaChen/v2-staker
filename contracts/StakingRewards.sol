@@ -31,9 +31,9 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     uint256 private _totalSupply;
     mapping(address => uint256) private _balances;
     
-    address [] public validStakers;
-    mapping(address => uint256) private _stakeTimeStamp;
-    mapping(address => uint) private _indexOfAccounts; // for valid stakers
+    // address [] public validStakers;
+    // mapping(address => uint256) private _stakeTimeStamp;
+    // mapping(address => uint) private _indexOfAccounts; // for valid stakers
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -104,7 +104,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         require(amount > 0, "Cannot stake 0");
         _totalSupply = _totalSupply.add(amount);
 
-        _entryStake(msg.sender);
+       // _entryStake(msg.sender);
 
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
@@ -118,7 +118,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
         stakingToken.safeTransfer(msg.sender, amount);
         
-        _leaveStake(msg.sender);
+        //_leaveStake(msg.sender);
         
         emit Withdrawn(msg.sender, amount);
     }
@@ -139,116 +139,116 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
 
     // https://ethereum.stackexchange.com/questions/1527/how-to-delete-an-element-at-a-certain-index-in-an-array
     // https://ethereum.stackexchange.com/questions/35790/efficient-approach-to-delete-element-from-array-in-solidity 
-    function _removeValidStaker(uint index) private {
-        require(index < validStakers.length, "valid staker index not valid.");
-        validStakers[index] = validStakers[validStakers.length - 1];
-        _indexOfAccounts[validStakers[index]] = index;
-        validStakers.pop();
-    }
+    // function _removeValidStaker(uint index) private {
+    //     require(index < validStakers.length, "valid staker index not valid.");
+    //     validStakers[index] = validStakers[validStakers.length - 1];
+    //     _indexOfAccounts[validStakers[index]] = index;
+    //     validStakers.pop();
+    // }
 
-    function _entryStake(address account) private {
-        if (_balances[account] == 0) {
-            validStakers.push(account);
-            _indexOfAccounts[account] = validStakers.length - 1;
-            _stakeTimeStamp[account] = block.timestamp;
-        }
-    }
+    // function _entryStake(address account) private {
+    //     if (_balances[account] == 0) {
+    //         validStakers.push(account);
+    //         _indexOfAccounts[account] = validStakers.length - 1;
+    //         _stakeTimeStamp[account] = block.timestamp;
+    //     }
+    // }
 
-    function _leaveStake(address account) private {
-        if (_balances[account] == 0) {
-            uint index = _indexOfAccounts[account];
-            _removeValidStaker(index);
-            _stakeTimeStamp[account] = 0;
-        }
-    }
+    // function _leaveStake(address account) private {
+    //     if (_balances[account] == 0) {
+    //         uint index = _indexOfAccounts[account];
+    //         _removeValidStaker(index);
+    //         _stakeTimeStamp[account] = 0;
+    //     }
+    // }
 
     /// refers to IStakingRewards interface
     /// param duration: seconds of a period of time
-    function getAccountsByStakingDuration(uint256 duration) external view returns (address [] memory, uint) {
-        require(validStakers.length > 0, "valid stakers array has no one");
-        uint256 currentTimeStamp = block.timestamp;
-        uint count = 0;
-        address[] memory _addresses = new address[](validStakers.length);
-        for(uint i = 0; i < validStakers.length; i++) {
-            address currentAccount = validStakers[i];
-            uint256 stakeTimeStamp = _stakeTimeStamp[currentAccount];
-            if( stakeTimeStamp > 0) {
-                require(currentTimeStamp >=  stakeTimeStamp, "current block timestamp must greater than stake timestamp");
-                uint256 currentDuration = currentTimeStamp - stakeTimeStamp;
-                if (currentDuration >= duration) {
-                    _addresses[count] = currentAccount;
-                    count++;
-                }
-            }
-        }
+    // function getAccountsByStakingDuration(uint256 duration) external view returns (address [] memory, uint) {
+    //     require(validStakers.length > 0, "valid stakers array has no one");
+    //     uint256 currentTimeStamp = block.timestamp;
+    //     uint count = 0;
+    //     address[] memory _addresses = new address[](validStakers.length);
+    //     for(uint i = 0; i < validStakers.length; i++) {
+    //         address currentAccount = validStakers[i];
+    //         uint256 stakeTimeStamp = _stakeTimeStamp[currentAccount];
+    //         if( stakeTimeStamp > 0) {
+    //             require(currentTimeStamp >=  stakeTimeStamp, "current block timestamp must greater than stake timestamp");
+    //             uint256 currentDuration = currentTimeStamp - stakeTimeStamp;
+    //             if (currentDuration >= duration) {
+    //                 _addresses[count] = currentAccount;
+    //                 count++;
+    //             }
+    //         }
+    //     }
 
-        address[] memory _results = new address[](count);
-        for(uint i = 0; i < _results.length; i++) {
-            _results[i] = _addresses[i];
-        }
+    //     address[] memory _results = new address[](count);
+    //     for(uint i = 0; i < _results.length; i++) {
+    //         _results[i] = _addresses[i];
+    //     }
         
-        return (_results, count);
-    }
+    //     return (_results, count);
+    // }
 
 
-    function getValidStakersWithWeight() external view returns (address [] memory, uint256 [] memory, uint256 [] memory, uint) {
-        require(validStakers.length > 0, "valid stakers array has no one");
-        uint256 currentTimeStamp = block.timestamp;
-        require(currentTimeStamp < periodFinish, "current Time Stamp must in valid reward time range");
-        uint count = 0;
-        address[] memory _addresses = new address[](validStakers.length);
-        uint256[] memory _balancesWeight = new uint256[](validStakers.length);
-        uint256[] memory _timeDurationWeight = new uint256[](validStakers.length);
-        for (uint i = 0; i < validStakers.length; i++) {
-            address currentAccount = validStakers[i];
-            uint256 stakeTimeStamp = _stakeTimeStamp[currentAccount];
-            if (currentTimeStamp > stakeTimeStamp) {
-                uint256 balance = _balances[currentAccount];
-                // https://ethereum.stackexchange.com/questions/55701/how-to-do-solidity-percentage-calculation
-                uint256 balanceWeight = balance.mul(1e18).div(_totalSupply);
-                uint256 timeDuration = currentTimeStamp - stakeTimeStamp;
-                uint256 timeDurationWeight = timeDuration.mul(1e18).div(rewardsDuration);
+    // function getValidStakersWithWeight() external view returns (address [] memory, uint256 [] memory, uint256 [] memory, uint) {
+    //     require(validStakers.length > 0, "valid stakers array has no one");
+    //     uint256 currentTimeStamp = block.timestamp;
+    //     require(currentTimeStamp < periodFinish, "current Time Stamp must in valid reward time range");
+    //     uint count = 0;
+    //     address[] memory _addresses = new address[](validStakers.length);
+    //     uint256[] memory _balancesWeight = new uint256[](validStakers.length);
+    //     uint256[] memory _timeDurationWeight = new uint256[](validStakers.length);
+    //     for (uint i = 0; i < validStakers.length; i++) {
+    //         address currentAccount = validStakers[i];
+    //         uint256 stakeTimeStamp = _stakeTimeStamp[currentAccount];
+    //         if (currentTimeStamp > stakeTimeStamp) {
+    //             uint256 balance = _balances[currentAccount];
+    //             // https://ethereum.stackexchange.com/questions/55701/how-to-do-solidity-percentage-calculation
+    //             uint256 balanceWeight = balance.mul(1e18).div(_totalSupply);
+    //             uint256 timeDuration = currentTimeStamp - stakeTimeStamp;
+    //             uint256 timeDurationWeight = timeDuration.mul(1e18).div(rewardsDuration);
 
-               _addresses[count] = currentAccount;
-               _balancesWeight[count] = balanceWeight;
-               _timeDurationWeight[count] = timeDurationWeight;
-               count++;
+    //            _addresses[count] = currentAccount;
+    //            _balancesWeight[count] = balanceWeight;
+    //            _timeDurationWeight[count] = timeDurationWeight;
+    //            count++;
 
-            }
-        }
+    //         }
+    //     }
 
-        address[] memory addresses_result = new address[](count);
-        uint256[] memory balance_weight_result = new uint256[](count);
-        uint256[] memory timeduration_weight_result = new uint256[](count);
-        for(uint i = 0; i < count; i++) {
-            addresses_result[i] = _addresses[i];
-            balance_weight_result[i] = _balancesWeight[i];
-            timeduration_weight_result[i] = _timeDurationWeight[i];
-        }
+    //     address[] memory addresses_result = new address[](count);
+    //     uint256[] memory balance_weight_result = new uint256[](count);
+    //     uint256[] memory timeduration_weight_result = new uint256[](count);
+    //     for(uint i = 0; i < count; i++) {
+    //         addresses_result[i] = _addresses[i];
+    //         balance_weight_result[i] = _balancesWeight[i];
+    //         timeduration_weight_result[i] = _timeDurationWeight[i];
+    //     }
 
-        return (addresses_result, balance_weight_result, timeduration_weight_result, count);
-    }
+    //     return (addresses_result, balance_weight_result, timeduration_weight_result, count);
+    // }
 
-    function getWeight(address account) external view returns (uint256, uint256) {
-        require(account != address(0), "address must not zero address");
-        if(_balances[account] == 0) {
-            return (0, 0);
-        }
+    // function getWeight(address account) external view returns (uint256, uint256) {
+    //     require(account != address(0), "address must not zero address");
+    //     if(_balances[account] == 0) {
+    //         return (0, 0);
+    //     }
 
-        uint256 currentTimeStamp = block.timestamp;
-        require(currentTimeStamp < periodFinish, "current Time Stamp must in valid reward time range");
-        uint256 stakeTimeStamp = _stakeTimeStamp[account];
-        if (currentTimeStamp > stakeTimeStamp) {
-            uint256 balance = _balances[account];
-            // https://ethereum.stackexchange.com/questions/55701/how-to-do-solidity-percentage-calculation
-            uint256 balanceWeight = balance.mul(1e18).div(_totalSupply);
-            uint256 timeDuration = currentTimeStamp - stakeTimeStamp;
-            uint256 timeDurationWeight = timeDuration.mul(1e18).div(rewardsDuration);
-            return (balanceWeight, timeDurationWeight);
-        } else {
-            return (0, 0);
-        }
-    }
+    //     uint256 currentTimeStamp = block.timestamp;
+    //     require(currentTimeStamp < periodFinish, "current Time Stamp must in valid reward time range");
+    //     uint256 stakeTimeStamp = _stakeTimeStamp[account];
+    //     if (currentTimeStamp > stakeTimeStamp) {
+    //         uint256 balance = _balances[account];
+    //         // https://ethereum.stackexchange.com/questions/55701/how-to-do-solidity-percentage-calculation
+    //         uint256 balanceWeight = balance.mul(1e18).div(_totalSupply);
+    //         uint256 timeDuration = currentTimeStamp - stakeTimeStamp;
+    //         uint256 timeDurationWeight = timeDuration.mul(1e18).div(rewardsDuration);
+    //         return (balanceWeight, timeDurationWeight);
+    //     } else {
+    //         return (0, 0);
+    //     }
+    // }
 
     /* ========== RESTRICTED FUNCTIONS ========== */
     // ony rewardsDistribution call this method
@@ -273,31 +273,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         emit RewardAdded(reward);
     }
 
-    // Almost same as notifyRewardAmount
-    function notifyRewardAmount2(uint256 _rewardDuration, uint256 _rewardAmount) external onlyRewardsDistribution updateReward(address(0)) {
-        rewardsDuration = _rewardDuration;
-        uint256 reward = _rewardAmount;
-
-        if (block.timestamp >= periodFinish) {
-            rewardRate = reward.div(rewardsDuration);
-        } else {
-            uint256 remaining = periodFinish.sub(block.timestamp);
-            uint256 leftover = remaining.mul(rewardRate);
-            rewardRate = reward.add(leftover).div(rewardsDuration);
-        }
-
-        // Ensure the provided reward amount is not more than the balance in the contract.
-        // This keeps the reward rate in the right range, preventing overflows due to
-        // very high values of rewardRate in the earned and rewardsPerToken functions;
-        // Reward + leftover must be less than 2^256 / 10^18 to avoid overflow.
-        uint balance = rewardsToken.balanceOf(address(this));
-        require(rewardRate <= balance.div(rewardsDuration), "Provided reward too high");
-
-        lastUpdateTime = block.timestamp;
-        periodFinish = block.timestamp.add(rewardsDuration);
-        emit RewardAdded(reward);
-    }
-
+   
     /* ========== MODIFIERS ========== */
 
     modifier updateReward(address account) {
