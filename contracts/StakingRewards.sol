@@ -228,6 +228,26 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         return (addresses_result, balance_weight_result, timeduration_weight_result, count);
     }
 
+    function getWeight(address account) external view returns (uint256, uint256) {
+        require(account != address(0), "address must not zero address");
+        if(_balances[account] == 0) {
+            return (0, 0);
+        }
+
+        uint256 currentTimeStamp = block.timestamp;
+        uint256 stakeTimeStamp = _stakeTimeStamp[account];
+        if (currentTimeStamp > stakeTimeStamp) {
+            uint256 balance = _balances[account];
+            // https://ethereum.stackexchange.com/questions/55701/how-to-do-solidity-percentage-calculation
+            uint256 balanceWeight = balance.mul(1e18).div(_totalSupply);
+            uint256 timeDuration = currentTimeStamp - stakeTimeStamp;
+            uint256 timeDurationWeight = timeDuration.mul(1e18).div(rewardsDuration);
+            return (balanceWeight, timeDurationWeight);
+        } else {
+            return (0, 0);
+        }
+    }
+
     /* ========== RESTRICTED FUNCTIONS ========== */
     // ony rewardsDistribution call this method
     function notifyRewardAmount(uint256 reward) external onlyRewardsDistribution updateReward(address(0)) {

@@ -308,6 +308,10 @@ describe("Staker contract", function () {
       expect(time_w[0]).to.gt(0);
       expect(time_w[1]).to.gt(0);
       expect(time_w[2]).to.gt(0);
+
+      const [weight_balance, weight_time] = await StakingRewardsContract.getWeight(addr1.address);
+      expect(weight_balance).to.gt(0);
+      expect(weight_time).to.gt(0);
     }
 
     {
@@ -319,6 +323,10 @@ describe("Staker contract", function () {
       expect(accounts.includes(addr2.address)).to.equal(false);
       expect(accounts.includes(addr1.address)).to.equal(true);
       expect(accounts.includes(addr3.address)).to.equal(true);
+
+      const [weight_balance, weight_time] = await StakingRewardsContract.getWeight(addr2.address);
+      expect(weight_balance).to.equal(0);
+      expect(weight_time).to.equal(0);
     }
 
     {
@@ -346,6 +354,18 @@ describe("Staker contract", function () {
       expect(accounts.includes(addr2.address)).to.equal(false);
       expect(accounts.includes(addr1.address)).to.equal(false);
       expect(accounts.includes(addr3.address)).to.equal(true);
+
+      const [weight_balance, weight_time] = await StakingRewardsContract.getWeight(addr1.address);
+      expect(weight_balance).to.equal(0);
+      expect(weight_time).to.equal(0);
+
+      const [weight_balance_0, weight_time_0] = await StakingRewardsContract.getWeight(addr2.address);
+      expect(weight_balance_0).to.equal(0);
+      expect(weight_time_0).to.equal(0);
+
+      const [weight_balance_1, weight_time_1] = await StakingRewardsContract.getWeight(addr3.address);
+      expect(weight_balance_1).to.gt(0);
+      expect(weight_time_1).to.gt(0);
     }
 
     {
