@@ -52,6 +52,18 @@ LP token就是Uni-V2的代币，也就是UniswapV2ERC20。这个代币表示流�
 
 - `function getWeight(address account) external view returns (uint256, uint256)` 返回参数第一个参数是质押数额占比权重，第二个参数是质押时间占比权重。小数表示法同上。
 
+### 5. StakingRewarsFactory的新增接口
+
+根据客户描述:
+
+> 单币质押分润模型：
+> 质押BALL分平台手续费；
+> a. 质押$BALL，按照质押时间和质押数量，分享平台的手续费利润50%。
+> b. 具体逻辑：平台收到手续费（应该是USDT）后，会定期（2天）从市场上回购 $BALL，并打进矿池。质押者会按一定速率挖取这个$BALL
+
+那么Factory就定期打钱到Stake的池子中，如果每两天，打1个ball，那么就是，如果一个ball的decimal是1
+e18，那么具体的接口参数就这样调用: `notifyRewardAmount2(stakingTokenAddress, 60*60*24*2, 1000000000000000000)` 第一个参数就是支持质押代码的地址，对应分润模型，也是ball的地址，那么第二个参数就是2天的秒数，第三个参数就是这2天要瓜分的奖励代币的数额（在这里是ball代币）
+
 ## Development and Testing
 
 ```sh
