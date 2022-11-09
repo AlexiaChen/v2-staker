@@ -194,6 +194,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     function getValidStakersWithWeight() external view returns (address [] memory, uint256 [] memory, uint256 [] memory, uint) {
         require(validStakers.length > 0, "valid stakers array has no one");
         uint256 currentTimeStamp = block.timestamp;
+        require(currentTimeStamp < periodFinish, "current Time Stamp must in valid reward time range");
         uint count = 0;
         address[] memory _addresses = new address[](validStakers.length);
         uint256[] memory _balancesWeight = new uint256[](validStakers.length);
@@ -235,6 +236,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         }
 
         uint256 currentTimeStamp = block.timestamp;
+        require(currentTimeStamp < periodFinish, "current Time Stamp must in valid reward time range");
         uint256 stakeTimeStamp = _stakeTimeStamp[account];
         if (currentTimeStamp > stakeTimeStamp) {
             uint256 balance = _balances[account];
