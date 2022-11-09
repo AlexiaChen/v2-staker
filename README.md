@@ -63,6 +63,29 @@ yarn test
 
 ### Goerli Tesnet
 
+#### v4
+
+这个版本增加了[这个](docs/distribute-ball-design-v2.md) 功能。
+
+Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
+
+- StakingRewardsFactory address `0x58f42b3Ce1fb37662d5f0e5542856B0C2D49d30d` https://goerli.etherscan.io/address/0x58f42b3Ce1fb37662d5f0e5542856B0C2D49d30d
+   - constructor(`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`， `1667977116`)
+
+- deployed(`0xA00eFA5eFBba8820c4C1aF409b9e95E68C628Bb2`)
+   - Staking Pool address `0x0fC048f90116824694B74f9B4F1E6d3E3D59318e`
+   - constructor(`0x58f42b3Ce1fb37662d5f0e5542856B0C2D49d30d`,`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`,`0xA00eFA5eFBba8820c4C1aF409b9e95E68C628Bb2`)
+
+https://goerli.etherscan.io/address/0x0fc048f90116824694b74f9b4f1e6d3e3d59318e
+
+
+- deployed(`0x8eFcEe520a44C8dC8834109ED39a70CcAADD1302`)
+   - Staking Pool address `0x43509e25474fe6c84fEAf7B042D581eD52DF76c7`
+   - constructor(`0x58f42b3Ce1fb37662d5f0e5542856B0C2D49d30d`,`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`,`0x8eFcEe520a44C8dC8834109ED39a70CcAADD1302`)
+
+https://goerli.etherscan.io/address/0x43509e25474fe6c84feaf7b042d581ed52df76c7
+
+
 #### v3
 
 这个版本增加了[这个](docs/distribute-ball-design.md) 功能。
