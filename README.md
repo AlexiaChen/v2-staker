@@ -80,6 +80,13 @@ Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c
 
    https://goerli.etherscan.io/address/0x9fea271bb19b8adc950dcac9a29dc5db68c5b338
 
+- StakingRewardsFactory (Ball) address `0xcA5df1d303cD228228dDB9bbDd8D989F4CF84F81` https://goerli.etherscan.io/address/0xcA5df1d303cD228228dDB9bbDd8D989F4CF84F81
+
+deployed stake pool
+ `0x735dE4FfA63960ad533AbB86d02BF601a2b8DfB5` (Ball) ->  `0xdF16953E6063066F61D4B9849e82D798176E9BB4`
+
+ https://goerli.etherscan.io/address/0xdF16953E6063066F61D4B9849e82D798176E9BB4
+
 #### v4
 
 这个版本增加了[这个](docs/distribute-ball-design-v2.md) 功能。(注意，没有锁定stake 48小时的功能)
