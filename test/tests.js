@@ -132,9 +132,18 @@ describe("Staker contract", function () {
     expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount);
     expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount);
     expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount);
+    
+    
+    
     // 取款，也就是提取质押的stake token，把质押的token转移到自己的地址
     const withdrawAmount = 1000;
+    await expect(StakingRewardsContract.withdraw(withdrawAmount)).to.be.revertedWith("cannot withdraw our stake, this time in locking range");
+    
+    await network.provider.send("evm_increaseTime", [60*60*24*2+5]);
+    await network.provider.send("evm_mine");
+
     await StakingRewardsContract.withdraw(withdrawAmount);
+    
     expect(await StakingRewardsContract.totalSupply()).to.equal(stakingAmount - withdrawAmount);
     expect(await StakingRewardsContract.balanceOf(owner.address)).to.equal(stakingAmount - withdrawAmount);
     expect(await hreMockStaking.balanceOf(StakingRewardsContract.address)).to.equal(stakingAmount - withdrawAmount);
@@ -166,18 +175,19 @@ describe("Staker contract", function () {
     console.log("blockBefore timestamp %s and waiting for a while...", blockBefore.timestamp);
 
     await hreStakingRedwardsFactory.notifyRewardAmounts();
-    // 延迟一段时间，拿取奖励
-    this.timeout(5*60*1000);
-    await wait(1000*60*1);
+    
+    this.timeout(30*1000);
+    await wait(1000*4);
+
+    await network.provider.send("evm_increaseTime", [60*60*24*2+10]);
+    await network.provider.send("evm_mine");
+
     
     const blockNumAfter = await ethers.provider.getBlockNumber();
     const blockAfter = await ethers.provider.getBlock(blockNumAfter);
     console.log("blockAfter timestamp %s", blockAfter.timestamp);
     
     await StakingRewardsContract.withdraw(1000);
-    console.log("waiting for a while...");
-    this.timeout(2*60*1000);
-    await wait(1000*30);
     await StakingRewardsContract.withdraw(1000);
 
     // 又切换成自动挖矿，这样一些状态变化才可以跟上单元测试的运行速度，不然转账会接收失败，因为成功是等待交易上链，如果间隔挖矿，转账完成后，立刻就去校验，账户余额，肯定是不对的
