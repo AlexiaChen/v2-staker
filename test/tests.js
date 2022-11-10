@@ -67,17 +67,17 @@ describe("Staker contract", function () {
 
     // ownership
     // 这里主要表达式，只有owner的权限账号才可以部署deploy一个新的质押代币
-    await expect(hreStakingRedwardsFactory.connect(addr1).deploy(hreMockStaking.address, 1000)).to.be.rejected;
-    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000)).to.be.ok;
+    await expect(hreStakingRedwardsFactory.connect(addr1).deploy(hreMockStaking.address, 1000, false)).to.be.rejected;
+    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000, false)).to.be.ok;
     // only once deploy with same staking token address
     // 对于同一个质押staking代币，只可以部署一次，无论怎样修改其对应的奖励额度
-    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, 200)).to.be.rejected;
+    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, 200, false)).to.be.rejected;
 
   });
 
   it("Staking Reward Factory deploy new stake contract", async function () {
     const { hreStakingRedwardsFactory, hreMockStaking } = await loadFixture(deployTokenFixture);
-    await expect(await hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000)).to.be.ok;
+    await expect(await hreStakingRedwardsFactory.deploy(hreMockStaking.address, 1000, false)).to.be.ok;
     // deploy staking token
     // 每部署一个新的质押代币，其对应的代币合约地址就会被保存在Factory中
     expect(await hreStakingRedwardsFactory.stakingTokens(0)).to.be.equal(hreMockStaking.address);
@@ -90,7 +90,7 @@ describe("Staker contract", function () {
     
     // 部署一个staking token，质押这个staking token，可以获得奖励，奖励的amount为1000
     const rewardAmount = 10000000000;
-    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, rewardAmount)).to.be.ok;
+    await expect(hreStakingRedwardsFactory.deploy(hreMockStaking.address, rewardAmount, true)).to.be.ok;
     expect(await hreStakingRedwardsFactory.stakingTokens(0)).to.be.equal(hreMockStaking.address);
 
     // Factory指定的工作时间戳还没有到,所以不可以开始其自身的工作
