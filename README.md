@@ -80,12 +80,12 @@ Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c
 
    https://goerli.etherscan.io/address/0x9fea271bb19b8adc950dcac9a29dc5db68c5b338
 
-- StakingRewardsFactory (Ball) address `0xcA5df1d303cD228228dDB9bbDd8D989F4CF84F81` https://goerli.etherscan.io/address/0xcA5df1d303cD228228dDB9bbDd8D989F4CF84F81
+- StakingRewardsFactory (Ball) address `0x221079aDD47E397ea989c8B38a11AF52Fcea2Bf0` https://goerli.etherscan.io/address/0x221079aDD47E397ea989c8B38a11AF52Fcea2Bf0
 
 deployed stake pool
- `0x735dE4FfA63960ad533AbB86d02BF601a2b8DfB5` (Ball) ->  `0xdF16953E6063066F61D4B9849e82D798176E9BB4`
+ `0x735dE4FfA63960ad533AbB86d02BF601a2b8DfB5` (Ball) ->  `0x7B138cD8290A4cAce1545c053708775249918a08`
 
- https://goerli.etherscan.io/address/0xdF16953E6063066F61D4B9849e82D798176E9BB4
+https://goerli.etherscan.io/address/0x7B138cD8290A4cAce1545c053708775249918a08
 
 #### v4
 
