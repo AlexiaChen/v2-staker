@@ -37,17 +37,20 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
 
     uint256 private lockStakeDuration = 2 days;
     mapping(address => uint256) public stakeLockFinishTimeStamp;
+    bool public enableLockStake;
 
     /* ========== CONSTRUCTOR ========== */
 
     constructor(
         address _rewardsDistribution,
         address _rewardsToken,
-        address _stakingToken
+        address _stakingToken,
+        bool _enableLockStake
     ) public {
         rewardsToken = IERC20(_rewardsToken);
         stakingToken = IERC20(_stakingToken);
         rewardsDistribution = _rewardsDistribution;
+        enableLockStake = _enableLockStake;
     }
 
     /* ========== VIEWS ========== */
@@ -111,15 +114,20 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
 
-        stakeLockFinishTimeStamp[msg.sender] = block.timestamp.add(lockStakeDuration);
-               
+        if (enableLockStake) {
+            stakeLockFinishTimeStamp[msg.sender] = block.timestamp.add(lockStakeDuration);
+        }
+
         emit Staked(msg.sender, amount);
     }
 
     function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
-        require(block.timestamp > stakeLockFinishTimeStamp[msg.sender], "cannot withdraw our stake, this time in locking range");
         
+        if(enableLockStake) {
+            require(block.timestamp > stakeLockFinishTimeStamp[msg.sender], "cannot withdraw our stake, this time in locking range");
+        }
+       
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
         stakingToken.safeTransfer(msg.sender, amount);
