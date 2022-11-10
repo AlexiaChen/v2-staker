@@ -63,7 +63,7 @@ yarn test
 
 #### v4
 
-这个版本增加了[这个](docs/distribute-ball-design-v2.md) 功能。
+这个版本增加了[这个](docs/distribute-ball-design-v2.md) 功能。(注意，没有锁定stake 48小时的功能)
 
 Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
 
