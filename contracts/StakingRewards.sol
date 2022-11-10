@@ -51,6 +51,9 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         stakingToken = IERC20(_stakingToken);
         rewardsDistribution = _rewardsDistribution;
         enableLockStake = _enableLockStake;
+        if(!_enableLockStake) {
+            rewardsDuration = 60 days;
+        }
     }
 
     /* ========== VIEWS ========== */
