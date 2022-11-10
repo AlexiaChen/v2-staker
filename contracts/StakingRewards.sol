@@ -36,7 +36,7 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
     //mapping(address => uint) private _indexOfAccounts; // for valid stakers
 
     uint256 private lockStakeDuration = 2 days;
-    mapping(address => uint256) private _stakeLockFinishTimeStamp;
+    mapping(address => uint256) public stakeLockFinishTimeStamp;
 
     /* ========== CONSTRUCTOR ========== */
 
@@ -111,14 +111,14 @@ contract StakingRewards is IStakingRewards, RewardsDistributionRecipient, Reentr
         _balances[msg.sender] = _balances[msg.sender].add(amount);
         stakingToken.safeTransferFrom(msg.sender, address(this), amount);
 
-        _stakeLockFinishTimeStamp[msg.sender] = block.timestamp.add(lockStakeDuration);
+        stakeLockFinishTimeStamp[msg.sender] = block.timestamp.add(lockStakeDuration);
                
         emit Staked(msg.sender, amount);
     }
 
     function withdraw(uint256 amount) public nonReentrant updateReward(msg.sender) {
         require(amount > 0, "Cannot withdraw 0");
-        require(block.timestamp > _stakeLockFinishTimeStamp[msg.sender], "cannot withdraw our stake, this time in locking range");
+        require(block.timestamp > stakeLockFinishTimeStamp[msg.sender], "cannot withdraw our stake, this time in locking range");
         
         _totalSupply = _totalSupply.sub(amount);
         _balances[msg.sender] = _balances[msg.sender].sub(amount);
