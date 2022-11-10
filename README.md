@@ -61,6 +61,25 @@ yarn test
 
 ### Goerli Tesnet
 
+#### v5
+
+这个版本增加了[v3](docs/distribute-ball-design-v3.md)中的锁仓功能。
+
+Deploying contracts with the account: `0x30B29E4615C6c7fcDF648Dc539dB7724743024c5`
+
+- StakingRewardsFactory（MRT） address `0x253aF0a5F27c76D1636cA7D518e56125C42Eb505` https://goerli.etherscan.io/address/0x253af0a5f27c76d1636ca7d518e56125c42eb505 
+   - constructor(`0xc01C97800cbD85f39aE204e9510c400B27F9C93B`, `1668041424`) 
+
+ deployed stake Pool
+
+   ` 0xA00eFA5eFBba8820c4C1aF409b9e95E68C628Bb2`   -> `0xD99f9364d1f201C9A0c0390c4def87eFb0203A1f`
+
+   https://goerli.etherscan.io/address/0xD99f9364d1f201C9A0c0390c4def87eFb0203A1f 
+
+   `0x8eFcEe520a44C8dC8834109ED39a70CcAADD1302` -> ` 0x9FeA271bb19B8AdC950DcAC9A29Dc5dB68c5b338`
+
+   https://goerli.etherscan.io/address/0x9fea271bb19b8adc950dcac9a29dc5db68c5b338
+
 #### v4
 
 这个版本增加了[这个](docs/distribute-ball-design-v2.md) 功能。(注意，没有锁定stake 48小时的功能)
