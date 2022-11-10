@@ -1,4 +1,4 @@
-Doc status: Not reviewed && implemented
+Doc status: Reviewed && implemented
 
 ## 背景介绍
 
@@ -37,6 +37,9 @@ Doc status: Not reviewed && implemented
 
 从以上的沟通需求来看，那么目前的stake池子的逻辑算法就是这样建模的，需求也完全满足客户要求。所以对外提供地址的权重占比就是多此一举，完全没有必要，也不节省gas费用。客户也不关心奖励的时间区间设置，因为只要模型是满足以上沟通的需求逻辑就可以了。所以最终又走回了原来那条路。
 
+- 另外还需要更新`rewardDuration`， 客户觉得60天太长了。
+- stake的质押资金要锁定48个小时，如果有新的资金进来，还需要更新锁定时间。
+
 ## 实现
 
 改造StakingRewardsFactory合约，新增两个接口:
@@ -48,5 +51,7 @@ Doc status: Not reviewed && implemented
 
 删除 [设计方案第二版](./distribute-ball-design-v2.md)中提到的，notify中的`rewardDuration`参数。删除 `function getValidStakersWithWeight() external view returns `接口, 删除一切对外提供权重占比的接口。
 
+- 更新 `rewardsDuration` 参数为5天
+- 在stake方法中增加  `_stakeLockFinishTimeStamp[msg.sender] = block.timestamp.add(lockStakeDuration);` 在withdraw方法中增加  `require(block.timestamp > _stakeLockFinishTimeStamp[msg.sender], "cannot withdraw our stake, this time in locking range");`
 
 
