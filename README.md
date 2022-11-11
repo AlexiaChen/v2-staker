@@ -9,6 +9,7 @@ This is the canonical staking contract designed for [Uniswap V3](https://github.
 
 ## Audit report
 
+因为我们的项目就是用的uniswapv2流动性挖矿的源码，所以这个ZooDAO的合约审计报告适合这个项目，用的都是同一个codebase，而且并没有太多修改。
 https://github.com/ZooDAO-Project/liquidity-staker/blob/4b491a546d166b95b96272144d84fa5bb570a1ee/ZooDAO_Liquidity_Staker_Audit_Report_by_WatchPug.pdf
 
 ## Arch
